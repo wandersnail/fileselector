@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">FileSelector</string>
+    <string name="select_file">选择文件</string>
+    <string name="select_dir">选择文件夹</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="back_dir">上层</string>
+    <string name="selected_pattern">已选(%d)</string>
+    <string name="select_all">全选</string>
+    <string name="all_not_select">全不选</string>
+    <string name="clear">清空</string>
+    <string name="close">关闭</string>
+    <string name="dir">文件夹</string>
+    <string name="item_pattern">%d项</string>
+    <string name="selected_item_pattern">已选%d项</string>
+    <string name="position_colon">位置:&#160;</string>
+</resources>

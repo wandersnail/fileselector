@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:minHeight="70dp">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:src="@drawable/folder"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+
+    <CheckBox
+        android:id="@+id/chkBox"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/chkbox_bg"
+        android:button="@null"
+        android:clickable="false"
+        android:focusable="false"/>
+
+    <ImageView
+        android:id="@+id/ivDel"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/del"/>
+    
+    <Button
+        android:id="@+id/chkView"
+        android:focusable="false"
+        android:background="@color/transparent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="56dp"
+        android:layout_height="70dp"/>
+    
+    <LinearLayout
+        android:id="@+id/layoutInfo"
+        android:orientation="vertical"
+        android:layout_toEndOf="@id/iv"
+        android:layout_toRightOf="@id/iv"
+        android:layout_toStartOf="@id/chkBox"
+        android:layout_toLeftOf="@id/chkBox"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvName"
+            android:text="html入门到精通"
+            android:textColor="@color/yahei"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvDesc"
+            android:text="5.4M"
+            android:textSize="12dp"
+            android:textColor="@color/edit_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <View
+        android:layout_alignLeft="@id/layoutInfo"
+        android:layout_alignStart="@id/layoutInfo"
+        android:layout_alignRight="@id/chkBox"
+        android:layout_alignEnd="@id/chkBox"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+</RelativeLayout>
