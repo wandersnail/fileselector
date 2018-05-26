@@ -39,8 +39,8 @@ artifacts {
 publish {
     userOrg = 'fszeng2017' //bintray.com用户名  
     groupId = 'com.github.fszeng2011' //jcenter上的路径  
-    artifactId = 'treeadapter' //项目名称  
+    artifactId = 'fileselector' //项目名称  
     publishVersion = '1.1.0' //版本号  
-    desc = '一个树形结构ListView的适配器'
+    desc = '文件选择器，支持选择文件夹及多选'
     website = 'https://github.com/fszeng2011'
 }

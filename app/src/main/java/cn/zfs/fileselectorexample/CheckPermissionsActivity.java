@@ -1,4 +1,4 @@
-package com.zfs.fileselectordemo;
+package cn.zfs.fileselectorexample;
 
 import android.Manifest;
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.zfs.fileselector;
+package cn.zfs.fileselector;
 
 import android.app.Dialog;
 import android.content.Context;

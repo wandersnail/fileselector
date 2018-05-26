@@ -1,4 +1,4 @@
-package com.zfs.fileselectordemo
+package cn.zfs.fileselectorexample
 
 import android.app.Activity
 import android.content.Intent
@@ -6,7 +6,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
-import com.zfs.fileselector.SelectFileActivity
+import cn.zfs.fileselector.SelectFileActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
