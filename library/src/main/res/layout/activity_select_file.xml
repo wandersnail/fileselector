@@ -4,82 +4,38 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     
-    <RelativeLayout
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="56dp">
-        <ImageView
-            android:id="@+id/ivBack"
-            android:scaleType="fitStart"
-            android:padding="18dp"
-            android:src="@drawable/back"
-            android:layout_width="70dp"
-            android:background="@drawable/simple_btn_bg"
-            android:layout_height="match_parent"/>
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_marginStart="10dp"
-            android:text="@string/app_name"
-            android:textColor="@color/titleBarCellColor"
-            android:textSize="20dp"
-            android:layout_toEndOf="@id/ivBack"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/tvAll"
-            android:gravity="center"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:text="@string/select_all"
-            android:textSize="14dp"
-            android:background="@drawable/simple_btn_bg"
-            android:textColor="@color/titleBarCellColor"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
-    </RelativeLayout>
-
     <LinearLayout
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp">
-        <LinearLayout
-            android:id="@+id/layoutUp"
-            android:gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:src="@drawable/arrow_up"
-                android:layout_width="14dp"
-                android:layout_height="16dp"/>
-            <TextView
-                android:text="@string/back_dir"
-                android:textColor="@color/yahei"
-                android:textSize="16dp"
-                android:layout_marginEnd="4dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <View
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:background="@color/divider"
-                android:layout_width="1px"
-                android:layout_height="40dp"/>
-        </LinearLayout>
-        
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
         <TextView
-            android:id="@+id/tvPath"
-            android:textSize="13dp"
-            android:textColor="@color/sub_text"
+            android:id="@+id/tvRoot"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:layout_marginStart="4dp"
-            android:layout_width="match_parent"
+            android:text="@string/root"
+            android:textSize="14dp"
+            android:textColor="@color/sub_text"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
+        <ImageView
+            android:background="@drawable/arrow"
+            android:layout_width="14dp"
+            android:layout_height="14dp"/>
+        <HorizontalScrollView
+            android:id="@+id/scrollView"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <LinearLayout
+                android:id="@+id/dirContainer"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </HorizontalScrollView>
     </LinearLayout>
+    
     <View
         android:background="@color/divider"
         android:layout_width="match_parent"

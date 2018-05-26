@@ -20,8 +20,8 @@ class MainActivity : CheckPermissionsActivity() {
         setContentView(R.layout.activity_main)
         btnSelect.setOnClickListener {
             SelectFileActivity.startForResult(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, REQUEST_SELECT_FILE_CODE,
-                    Environment.getExternalStorageDirectory(), true, false, { dir, name ->
-                !name.startsWith(".") && (File(dir, name).isDirectory || name.endsWith(".bin", true))
+                    Environment.getExternalStorageDirectory(), true, true, { dir, name ->
+                !name.startsWith(".")
             })
         }
     }

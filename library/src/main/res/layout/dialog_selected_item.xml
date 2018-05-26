@@ -30,7 +30,6 @@
         <TextView
             android:id="@+id/tvClear"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:text="@string/clear"
             android:textColor="@color/white"
             android:gravity="center"

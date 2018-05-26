@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,11 +44,11 @@ public class SelectedItemDialog extends Dialog implements View.OnClickListener {
 
     private View inflateView(Context context) {
         View view = View.inflate(context, R.layout.dialog_selected_item, null);
-        tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+        tvTitle = view.findViewById(R.id.tvTitle);
         view.findViewById(R.id.tvClose).setOnClickListener(this);
         view.findViewById(R.id.tvClear).setOnClickListener(this);
         adapter = new FileListAdapter();
-        ListView lv = (ListView) view.findViewById(R.id.lv);
+        ListView lv = view.findViewById(R.id.lv);
         lv.setAdapter(adapter);
         return view;
     }
@@ -99,10 +97,10 @@ public class SelectedItemDialog extends Dialog implements View.OnClickListener {
                 convertView = View.inflate(getContext(), R.layout.item_view, null);
                 holder = new ViewHolder();
                 convertView.setTag(holder);
-                holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
-                holder.tvDesc = (TextView) convertView.findViewById(R.id.tvDesc);
-                holder.iv = (ImageView) convertView.findViewById(R.id.iv);
-                holder.chkBox = (CheckBox) convertView.findViewById(R.id.chkBox);
+                holder.tvName = convertView.findViewById(R.id.tvName);
+                holder.tvDesc = convertView.findViewById(R.id.tvDesc);
+                holder.iv = convertView.findViewById(R.id.iv);
+                holder.chkBox = convertView.findViewById(R.id.chkBox);
                 holder.chkBox.setVisibility(View.INVISIBLE);
                 holder.chkView = convertView.findViewById(R.id.chkView);
                 holder.chkView.setTag(holder);
@@ -126,8 +124,7 @@ public class SelectedItemDialog extends Dialog implements View.OnClickListener {
                 holder.tvDesc.setVisibility(View.GONE);
                 holder.iv.setImageResource(R.drawable.folder);
             } else {
-                String text = activity.getString(R.string.position_colon) + item.file.getParentFile().getAbsolutePath();
-                holder.tvDesc.setText(text);
+                holder.tvDesc.setText(item.file.getParentFile().getAbsolutePath());
                 if (Utils.isApk(path) || Utils.isImage(path) || Utils.isVideo(path)) {
                     ImageLoader.getInstance().loadImage(path, holder.iv);
                 } else if (Utils.isAudio(path)) {

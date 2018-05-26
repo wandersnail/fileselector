@@ -7,15 +7,19 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -23,15 +27,13 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zeng on 2017/3/1.
  */
 
-public class SelectFileActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class SelectFileActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     private static final String EXTRA_IS_SELECT_FILE = "IS_SELECT_FILE";
     private static final String EXTRA_IS_MULTI_SELECT = "IS_MULTI_SELECT";
     private static final String EXTRA_SCREEN_ORIENTATION = "SCREEN_ORIENTATION";
@@ -39,20 +41,18 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
     public static final String EXTRA_SELECTED_FILE_LIST = "SELECTED_FILE_LIST";
     public static final String EXTRA_SELECTED_FILE = "SELECTED_FILE";
 
-    private LinearLayout layoutUp;
-    private TextView tvPath;
     private ListView lv;
     private TextView tvSelected;
-    private TextView tvAll;
+    private LinearLayout dirContainer;
+    private HorizontalScrollView scrollView;
 
     private boolean isSlectFile;
     private boolean isMultiSelect;
     private static FilenameFilter filenameFilter;
-    private Map<String, int[]> posMap = new HashMap<>();
+    private List<int[]> posList = new ArrayList<>();
     private List<Item> itemList = new ArrayList<>();
     private List<Item> selectItemList = new ArrayList<>();
     private boolean isSelectedAll;
-    private File location;
     private File rootFile;
     private FileListAdapter adapter;
     private SelectedItemDialog selectedItemDialog;
@@ -110,7 +110,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getDataFromIntent();
-        setContentView(R.layout.activity_select_file);
+        setContentView(R.layout.activity_select_file);        
         initViews();
     }
 
@@ -122,42 +122,41 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
 
     @Override
     public void onBackPressed() {
-        if (!location.equals(rootFile)) {
-            backToParentDir();
+        if (!posList.isEmpty()) {
+            View child = dirContainer.getChildAt(dirContainer.getChildCount() - 1);
+            TextView tv = child.findViewById(R.id.tv);
+            DirCell cell = (DirCell) tv.getTag();
+            dirContainer.removeView(child);
+            loadFiles(cell.location.getParentFile());
+            int[] ints = posList.remove(posList.size() - 1);
+            lv.setSelectionFromTop(ints[0], ints[1]);
         } else {
             super.onBackPressed();
         }
     }
 
-    //返回上层目录
-    private void backToParentDir() {
-        File parentFile = location.getParentFile();
-        if (parentFile.equals(rootFile)) {
-            layoutUp.setVisibility(View.GONE);
-        }
-        loadFiles(parentFile);
-        //恢复到上一级滚动到的位置
-        int[] ints = posMap.remove(parentFile.getAbsolutePath());
-        if (ints != null) {
-            lv.setSelectionFromTop(ints[0], ints[1]);
-        }
-    }
-
+    private void addDir(File file) {
+        View view = getLayoutInflater().inflate(R.layout.dir_view, null);        
+        TextView tv = view.findViewById(R.id.tv);
+        int childCount = dirContainer.getChildCount();
+        tv.setTag(new DirCell(childCount, file));
+        tv.setText(file.getName());
+        tv.setOnClickListener(this);
+        dirContainer.addView(view);
+    }    
+    
     private void initViews() {
-        TextView tvTitle = findViewById(R.id.tvTitle);
-        tvAll = findViewById(R.id.tvAll);
-        tvTitle.setText(isSlectFile ? R.string.select_file : R.string.select_dir);
-        tvAll.setVisibility(isMultiSelect ? View.VISIBLE : View.INVISIBLE);
-        ImageView ivBack = findViewById(R.id.ivBack);
-        ivBack.setColorFilter(ContextCompat.getColor(this, R.color.titleBarCellColor));
-        ivBack.setOnClickListener(this);
-        layoutUp = findViewById(R.id.layoutUp);
-        tvPath = findViewById(R.id.tvPath);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        setTitle(R.string.all_files);
+        dirContainer = findViewById(R.id.dirContainer);
+        scrollView = findViewById(R.id.scrollView);
+        TextView tvRoot = findViewById(R.id.tvRoot);
         lv = findViewById(R.id.lv);
         tvSelected = findViewById(R.id.tvSelected);
         tvSelected.setOnClickListener(this);
-        layoutUp.setOnClickListener(this);
-        layoutUp.setVisibility(View.GONE);
         tvOk = findViewById(R.id.tvOk);
         tvOk.setOnClickListener(this);
         tvOk.setEnabled(false);
@@ -165,8 +164,28 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         selectedItemDialog = new SelectedItemDialog(this);
         adapter = new FileListAdapter();
         lv.setAdapter(adapter);
-        lv.setOnItemClickListener(this);        
+        lv.setOnItemClickListener(this);     
+        tvRoot.setOnClickListener(this);
         loadFiles(rootFile);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.menuSelecteAll);
+        item.setVisible(isMultiSelect);
+        item.setTitle(isSelectedAll ? R.string.all_not_select : R.string.select_all);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menuSelecteAll) {
+            switchSelectAll(!isSelectedAll);
+        } else if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
     }
 
     private void getDataFromIntent() {
@@ -190,18 +209,13 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
 
     private void loadFiles(File dir) {
         itemList.clear();
-        if (dir.equals(Environment.getExternalStorageDirectory())) {
-            location = Environment.getExternalStorageDirectory();
-        } else {
-			location = dir;
-        }
         List<File> dirList = new ArrayList<>();
         List<File> fList = new ArrayList<>();
         File[] files;
         if (filenameFilter != null) {
-            files = location.listFiles(filenameFilter);
+            files = dir.listFiles(filenameFilter);
         } else {
-            files = location.listFiles();
+            files = dir.listFiles();
         }
         if (files != null) {
             for (File file : files) {
@@ -223,7 +237,12 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             addFileList(fList);
         }
         adapter.notifyDataSetChanged();
-        tvPath.setText(location.getAbsolutePath());
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_RIGHT);
+            }
+        });
     }
 
 	private Comparator<File> comparator = new Comparator<File>() {
@@ -262,7 +281,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         for (Item item : itemList) {
             //只全选指定类型
             if ((item.file.isDirectory() && !isSlectFile) || (item.file.isFile() && isSlectFile)) {
-                item.checked = isSelectedAll;
+                item.checked = enable;
                 updateSelectedFileList(item);
             }
         }
@@ -272,7 +291,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
     //清除全选状态，更新标题栏按钮文本
     private void switchSelectAllState(boolean selectAll) {
         isSelectedAll = selectAll;
-        tvAll.setText(isSelectedAll ? R.string.all_not_select : R.string.select_all);
+        invalidateOptionsMenu();
     }
 
     private void updateSelectedText() {
@@ -297,23 +316,45 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             }
             setResult(RESULT_OK, intent);
             finish();
-        } else if (v.getId() == R.id.layoutUp) {
-            backToParentDir();
-        } else if (v.getId() == R.id.ivBack) {
-            finish();
-        } else if (v.getId() == R.id.tvAll) {
-            switchSelectAll(!isSelectedAll);            
+        } else if (v.getId() == R.id.tv) {
+            DirCell cell = (DirCell) v.getTag();
+            //把当前之后的移除
+            int childCount = dirContainer.getChildCount();
+            if (cell.index < childCount - 1) {
+                dirContainer.removeViews(cell.index + 1, childCount - cell.index - 1);
+            }
+            //清除之后的位置记录
+            int[] ints = new int[2];
+            for (int i = posList.size() - 1; i >= 0; i--) {
+                if (cell.index < i) {
+                    ints = posList.remove(i);                    
+                } else {
+                    break;
+                }
+            }
+            //更新列表
+            loadFiles(cell.location);
+            lv.setSelectionFromTop(ints[0], ints[1]);
+        } else if (v.getId() == R.id.tvRoot) {
+            if (dirContainer.getChildCount() > 0) {
+                loadFiles(rootFile);
+                int[] ints = posList.remove(0);
+                lv.setSelectionFromTop(ints[0], ints[1]);
+                posList.clear();
+                dirContainer.removeAllViews();
+            }
         }
-    }
-
+    }    
+    
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Item item = itemList.get(position);
         if (item.file.isDirectory()) {
-            layoutUp.setVisibility(View.VISIBLE);
             switchSelectAllState(false);
             //记录点击条目所在文件夹的文件列表滚动到的位置
-            posMap.put(item.file.getParentFile().getAbsolutePath(), new int[]{lv.getFirstVisiblePosition(), lv.getChildAt(0).getTop()});
+            posList.add(new int[]{lv.getFirstVisiblePosition(), lv.getChildAt(0).getTop()});
+            //添加导航文件夹
+            addDir(item.file);
             loadFiles(item.file);
             //进入的时候重置回到顶端位置
             lv.setSelectionFromTop(0, 0);
@@ -399,7 +440,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
                         }
                     }
                 }
-                holder.tvDesc.setText(String.format(getString(R.string.item_pattern), num));
+                holder.tvDesc.setText(String.format(getString(num > 1 ? R.string.multi_item_pattern : R.string.single_item_pattern), num));
                 holder.iv.setImageResource(R.drawable.folder);
             } else {
                 holder.chkView.setClickable(false);
@@ -452,11 +493,6 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         adapter.notifyDataSetChanged();
         updateSelectedText();
         selectedItemDialog.updateList(selectItemList);
-        if (selectItemList.isEmpty()) {
-            switchSelectAllState(false);
-        } else if (selectItemList.containsAll(itemList)) {
-            switchSelectAllState(true);
-        }
     }
 
     public void updateSelectedFileList(Item item) {
@@ -472,5 +508,16 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             selectItemList.remove(item);
         }
         updateViews();
+        int count = 0;
+        for (Item i : itemList) {
+            if (i.file.isFile()) {
+                count++;
+            }
+        }
+        if (count > 0 && selectItemList.size() == count) {
+            switchSelectAllState(true);
+        } else {
+            switchSelectAllState(false);
+        }
     }
 }

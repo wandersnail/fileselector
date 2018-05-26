@@ -63,7 +63,7 @@ public class Utils {
         PackageInfo packageInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
         if (packageInfo != null) {
             ApplicationInfo appInfo = packageInfo.applicationInfo;
-            /**获取apk的图标 */
+            //获取apk的图标
             appInfo.sourceDir = path;
             appInfo.publicSourceDir = path;
             return appInfo.loadIcon(pm);

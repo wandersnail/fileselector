@@ -8,11 +8,11 @@ import java.io.File;
  * Created by zeng on 2017/3/1.
  */
 
-public class Item implements Comparable<Item> {
+class Item implements Comparable<Item> {
 	public File file;
 	public boolean checked;
 
-	public Item(File file, boolean checked) {
+	Item(File file, boolean checked) {
 		this.file = file;
 		this.checked = checked;
 	}

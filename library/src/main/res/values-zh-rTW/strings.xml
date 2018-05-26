@@ -1,0 +1,15 @@
+<resources>
+    <string name="all_files">全部文件</string>
+    <string name="root">根目錄</string>
+    <string name="ok">確定</string>
+    <string name="cancel">取消</string>
+    <string name="selected_pattern">已選(%d)</string>
+    <string name="select_all">全選</string>
+    <string name="all_not_select">全不選</string>
+    <string name="clear">清空</string>
+    <string name="close">關閉</string>
+    <string name="dir">文件夾</string>
+    <string name="single_item_pattern">%d項</string>
+    <string name="multi_item_pattern">%d項</string>
+    <string name="selected_item_pattern">已選%d項</string>
+</resources>

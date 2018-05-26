@@ -1,12 +1,14 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 27
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.1.0"
 
     }
 
@@ -21,5 +23,24 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly 'com.android.support:support-v4:27.1.1'
+    compileOnly 'com.android.support:appcompat-v7:27.1.1'
+}
+
+// 打包源码
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+publish {
+    userOrg = 'fszeng2017' //bintray.com用户名  
+    groupId = 'com.github.fszeng2011' //jcenter上的路径  
+    artifactId = 'treeadapter' //项目名称  
+    publishVersion = '1.1.0' //版本号  
+    desc = '一个树形结构ListView的适配器'
+    website = 'https://github.com/fszeng2011'
 }

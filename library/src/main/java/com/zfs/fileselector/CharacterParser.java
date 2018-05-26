@@ -88,6 +88,7 @@ public class CharacterParser {
 
     /**
      * 单字解析
+     * @param str 待解析
      * @return 返回字母
      */
     public static String convert(String str) {
@@ -108,6 +109,7 @@ public class CharacterParser {
 
     /**
      * 词组解析
+     * @param chs 待解析
      * @return 返回拼音
      */
     public static String getSelling(String chs) {

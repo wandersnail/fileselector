@@ -12,47 +12,47 @@ import java.util.List;
  * 执行shell命令工具类
  */
 
-public class ShellUtils {
-    public static final String COMMAND_SU = "su";
-    public static final String COMMAND_SH = "sh";
-    public static final String COMMAND_EXIT = "exit\n";
-    public static final String COMMAND_LINE_END = "\n";
+class ShellUtils {
+    private static final String COMMAND_SU = "su";
+    private static final String COMMAND_SH = "sh";
+    private static final String COMMAND_EXIT = "exit\n";
+    private static final String COMMAND_LINE_END = "\n";
 
 
     private ShellUtils() {}
 
-    /**
+    /*
      * check whether has root permission
      */
-    public static boolean hasRootPermission() {
+    static boolean hasRootPermission() {
         return execCommand("echo root", true).result == 0;
     }
 
 
-    /**
+    /*
      * execute shell command, default return result msg
      *
      * @param command command
      * @param isRoot  whether need to run with root
      * @see ShellUtils#execCommand(String[], boolean)
      */
-    public static CommandResult execCommand(String command, boolean isRoot) {
+    static CommandResult execCommand(String command, boolean isRoot) {
         return execCommand(new String[]{command}, isRoot);
     }
 
-    /**
+    /*
      * execute shell commands
      *
      * @param commands        command list
      * @param isRoot          whether need to run with root
      * @see ShellUtils#execCommand(String[], boolean)
      */
-    public static CommandResult execCommand(List<String> commands, boolean isRoot) {
+    static CommandResult execCommand(List<String> commands, boolean isRoot) {
         return execCommand(commands == null ? null : commands.toArray(new String[0]), isRoot);
     }
 
 
-    /**
+    /*
      * execute shell commands.
      *
      * @param commands        command array
@@ -62,7 +62,7 @@ public class ShellUtils {
      * <br/>
      * if {@link CommandResult#result} is -1, there maybe some excepiton.
      */
-    public static CommandResult execCommand(String[] commands, boolean isRoot) {
+    static CommandResult execCommand(String[] commands, boolean isRoot) {
         int result = -1;
         if (commands == null || commands.length == 0) {
             return new CommandResult(result, null, null);
@@ -145,40 +145,18 @@ public class ShellUtils {
         }
     }
     
-    /**
-     * result of command.
-     * <p>
-     * {@link CommandResult#result} means result of command, 0 means normal, else means error, same to excute in
-     * linux shell
-     * <br/>
-     * {@link CommandResult#successMsg} means success message of command result
-     * <br/>
-     * {@link CommandResult#errorMsg} means error message of command result
-     *
-     * @author Trinea 2013-5-16
-     */
-    public static class CommandResult {
-
-        /**
-         * result of command
-         **/
-        public int result;
-        /**
-         * success message of command result
-         **/
-        public String successMsg;
-        /**
-         * error message of command result
-         **/
-        public String errorMsg;
+    static class CommandResult {
+        int result;
+        String successMsg;
+        String errorMsg;
 
 
-        public CommandResult(int result) {
+        CommandResult(int result) {
             this.result = result;
         }
 
 
-        public CommandResult(int result, String successMsg, String errorMsg) {
+        CommandResult(int result, String successMsg, String errorMsg) {
             this.result = result;
             this.successMsg = successMsg;
             this.errorMsg = errorMsg;

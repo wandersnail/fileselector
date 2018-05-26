@@ -22,7 +22,7 @@ import java.util.concurrent.Semaphore;
  * Created by zeng on 2017/3/1.
  */
 
-public class ImageLoader {
+class ImageLoader {
 	private static ImageLoader mInstance;
 	//图片缓存的核心对象
 	private LruCache<String, Bitmap> mLruCache;
@@ -67,9 +67,7 @@ public class ImageLoader {
 		mSemaphoreThreadPool = new Semaphore(threadCount);
 	}
 
-	/**
-	 * 初始化后台轮询线程
-	 */
+	//初始化后台轮询线程
 	private void initBackThread() {
 		// 后台轮询线程
 		new Thread() {
@@ -107,7 +105,7 @@ public class ImageLoader {
 		}
 	}
 
-	public static ImageLoader getInstance() {
+	static ImageLoader getInstance() {
 		if (mInstance == null) {
 			synchronized (ImageLoader.class) {
 				if (mInstance == null) {
@@ -118,22 +116,22 @@ public class ImageLoader {
 		return mInstance;
 	}
 
-    public void setDefautImageBitmap(Bitmap bitmap) {
+    void setDefautImageBitmap(Bitmap bitmap) {
         defautBitmap = bitmap;
         defautBitmapResId = 0;
     }
 
-    public void setDefautImageResoure(int resid) {
+    void setDefautImageResoure(int resid) {
         defautBitmapResId = resid;
         defautBitmap = null;
     }
 
-    public void setLoadErrorImageBitmap(Bitmap bitmap) {
+    void setLoadErrorImageBitmap(Bitmap bitmap) {
         loadErrorBitmap = bitmap;
         loadErrorBitmapResId = 0;
     }
 
-    public void setLoadErrorImageResoure(int resid) {
+    void setLoadErrorImageResoure(int resid) {
         loadErrorBitmapResId = resid;
         loadErrorBitmap = null;
     }
@@ -160,7 +158,7 @@ public class ImageLoader {
 	 * @param path      图片路径
 	 * @param imageView 显示图片的ImageView
 	 */
-	public void loadImage(final String path, final ImageView imageView) {
+	void loadImage(String path, ImageView imageView) {
         if (TextUtils.isEmpty(path)) {
             if (loadErrorBitmap != null) {
                 imageView.setImageBitmap(loadErrorBitmap);
