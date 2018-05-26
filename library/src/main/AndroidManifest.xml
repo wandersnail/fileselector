@@ -1,11 +1,14 @@
 <manifest package="cn.zfs.fileselector"
           xmlns:android="http://schemas.android.com/apk/res/android">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
-        android:theme="@style/AppTheme"
         android:allowBackup="true"
-        android:supportsRtl="true">
-        <activity android:name=".SelectFileActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".SelectFileActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
     </application>
 </manifest>
