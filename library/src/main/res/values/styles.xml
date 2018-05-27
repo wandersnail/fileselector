@@ -2,8 +2,8 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/fsColorPrimary</item>
+        <item name="colorPrimaryDark">@color/fsColorPrimaryDark</item>
     </style>
 
     <!--对话框进入退出动画-->
