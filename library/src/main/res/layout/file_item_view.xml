@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/iv"
-        android:src="@drawable/folder"
+        android:src="@drawable/fs_folder"
         android:layout_centerVertical="true"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
@@ -20,7 +20,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/chkbox_bg"
+        android:background="@drawable/fs_chkbox_bg"
         android:button="@null"
         android:clickable="false"
         android:focusable="false"/>
@@ -32,12 +32,12 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/del"/>
+        android:background="@drawable/fs_del"/>
     
     <Button
         android:id="@+id/chkView"
         android:focusable="false"
-        android:background="@color/transparent"
+        android:background="@color/fsTransparent"
         android:layout_alignParentEnd="true"
         android:layout_width="56dp"
         android:layout_height="70dp"/>

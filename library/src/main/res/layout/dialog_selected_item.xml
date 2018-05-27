@@ -18,12 +18,12 @@
         <TextView
             android:id="@+id/tvClose"
             android:text="@string/close"
-            android:textColor="@color/white"
+            android:textColor="@color/fsWhite"
             android:gravity="center"
             android:textSize="16dp"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:background="@drawable/simple_btn_bg"
+            android:background="@drawable/fs_simple_btn_bg"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
         <TextView
@@ -31,15 +31,15 @@
             android:textSize="16dp"
             android:text="@string/selected_item_pattern"
             android:layout_centerInParent="true"
-            android:textColor="@color/white"
+            android:textColor="@color/fsWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tvClear"
-            android:background="@drawable/simple_btn_bg"
+            android:background="@drawable/fs_simple_btn_bg"
             android:layout_alignParentEnd="true"
             android:text="@string/clear"
-            android:textColor="@color/white"
+            android:textColor="@color/fsWhite"
             android:gravity="center"
             android:textSize="16dp"
             android:paddingStart="14dp"

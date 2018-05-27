@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <ImageView
-        android:background="@drawable/arrow"
+        android:background="@drawable/fs_arrow"
         android:layout_width="14dp"
         android:layout_height="14dp"/>
 </LinearLayout>

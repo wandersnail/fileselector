@@ -3,8 +3,8 @@
     <color name="fsColorPrimary">#588DFF</color>
     <color name="fsColorPrimaryDark">#4F7EE4</color>
 	<color name="fsMainBg">#F7F8FB</color>
-    <color name="transparent">#00000000</color>
-    <color name="white">#FFFFFF</color>
+    <color name="fsTransparent">#00000000</color>
+    <color name="fsWhite">#FFFFFF</color>
     <color name="fsYahei">#505050</color>
     <color name="fsDivider">#C6C6C6</color>
     <color name="fsSubText">#989898</color>

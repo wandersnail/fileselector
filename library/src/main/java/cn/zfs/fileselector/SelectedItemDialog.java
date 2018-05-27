@@ -77,8 +77,8 @@ public class SelectedItemDialog extends Dialog implements View.OnClickListener {
     private class FileListAdapter extends BaseAdapter {
 
         FileListAdapter() {
-            ImageLoader.getInstance().setDefautImageResoure(R.drawable.file);
-            ImageLoader.getInstance().setLoadErrorImageResoure(R.drawable.file);
+            ImageLoader.getInstance().setDefautImageResoure(R.drawable.fs_file);
+            ImageLoader.getInstance().setLoadErrorImageResoure(R.drawable.fs_file);
         }
 
         @Override
@@ -100,7 +100,7 @@ public class SelectedItemDialog extends Dialog implements View.OnClickListener {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = View.inflate(getContext(), R.layout.item_view, null);
+                convertView = View.inflate(getContext(), R.layout.file_item_view, null);
                 holder = new ViewHolder();
                 convertView.setTag(holder);
                 holder.tvName = convertView.findViewById(R.id.tvName);
@@ -128,27 +128,27 @@ public class SelectedItemDialog extends Dialog implements View.OnClickListener {
             String path = item.file.getAbsolutePath();
             if (item.file.isDirectory()) {
                 holder.tvDesc.setVisibility(View.GONE);
-                holder.iv.setImageResource(R.drawable.folder);
+                holder.iv.setImageResource(R.drawable.fs_folder);
             } else {
                 holder.tvDesc.setText(item.file.getParentFile().getAbsolutePath());
                 if (Utils.isApk(path) || Utils.isImage(path) || Utils.isVideo(path)) {
                     ImageLoader.getInstance().loadImage(path, holder.iv);
                 } else if (Utils.isAudio(path)) {
-                    holder.iv.setImageResource(R.drawable.audio);
+                    holder.iv.setImageResource(R.drawable.fs_audio);
                 } else if (Utils.isText(path)) {
-                    holder.iv.setImageResource(R.drawable.text);
+                    holder.iv.setImageResource(R.drawable.fs_text);
                 } else if (Utils.isPdf(path)) {
-                    holder.iv.setImageResource(R.drawable.pdf);
+                    holder.iv.setImageResource(R.drawable.fs_pdf);
                 } else if (Utils.isExcel(path)) {
-                    holder.iv.setImageResource(R.drawable.excel);
+                    holder.iv.setImageResource(R.drawable.fs_excel);
                 } else if (Utils.isWord(path)) {
-                    holder.iv.setImageResource(R.drawable.word);
+                    holder.iv.setImageResource(R.drawable.fs_word);
                 } else if (Utils.isPPT(path)) {
-                    holder.iv.setImageResource(R.drawable.ppt);
+                    holder.iv.setImageResource(R.drawable.fs_ppt);
                 } else if (Utils.isZip(path)) {
-                    holder.iv.setImageResource(R.drawable.zip);
+                    holder.iv.setImageResource(R.drawable.fs_zip);
                 } else {
-                    holder.iv.setImageResource(R.drawable.file);
+                    holder.iv.setImageResource(R.drawable.fs_file);
                 }
             }
             holder.chkBox.setChecked(item.checked);
