@@ -7,7 +7,7 @@
         android:id="@+id/tv"
         android:text="@string/root"
         android:textSize="14dp"
-        android:textColor="@color/sub_text"
+        android:textColor="@color/fsSubText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <ImageView

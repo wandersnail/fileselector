@@ -9,13 +9,19 @@ import java.io.File;
  */
 
 class Item implements Comparable<Item> {
-	public File file;
-	public boolean checked;
+    String desc;
+	File file;
+	boolean checked;
 
 	Item(File file, boolean checked) {
 		this.file = file;
 		this.checked = checked;
 	}
+	
+	Item(String desc, File file, boolean checked) {
+	    this(file, checked);
+	    this.desc = desc;
+    }
 
 	@Override
 	public int compareTo(@NonNull Item o) {
@@ -32,7 +38,7 @@ class Item implements Comparable<Item> {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (o == null || !(o instanceof Item)) return false;
 		Item item = (Item) o;
 		return file != null ? file.equals(item.file) : item.file == null;
 

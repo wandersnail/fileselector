@@ -9,15 +9,24 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
+import android.os.storage.StorageManager;
 import android.provider.MediaStore;
+import android.support.v4.os.EnvironmentCompat;
 
+import java.io.File;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * Created by zeng on 2017/3/1.
  */
 
-public class Utils {
+class Utils {
 	private static final String[] videoSuffixs = {".avi", ".wmv", ".wmp", ".wm", ".asf", ".mpg", ".mpeg",
 			".mpe", ".m1v", ".m2v", ".mpv2", ".mp2v", ".ts", ".tp", ".tpr", ".trp", ".vob", ".ifo", ".ogm",
 			"ogv", ".mp4", ".m4v", ".m4p", ".m4b", ".3gp", ".3gpp", ".3g2", ".3gp2", ".mkv", ".rm", ".ram",
@@ -31,7 +40,7 @@ public class Utils {
     private static final String[] zipSuffixs = {".rar", ".zip", ".7z", ".gz", ".arj", ".cab", ".jar", ".tar", ".ace"};
     private static final String[] psSuffixs = {".psd", ".pdd", ".eps", ".psb"};
     private static final String[] htmlSuffixs = {".htm", ".html", ".mht", ".mhtml"};
-    private static final String[] developerSuffixs = {".db", ".db3", ".sqlite", ".xml", ".wdb", ".mdf", ".dbf", ".properties", ".cfg", ".ini", ".sys"};
+    private static final String[] developerSuffixs = {".db", ".db-journal", ".db3", ".sqlite", ".xml", ".wdb", ".mdf", ".dbf", ".properties", ".cfg", ".ini", ".sys"};
 	
     /**
      * 根据视频生成缩略图
@@ -39,7 +48,7 @@ public class Utils {
      * @param width 要生成的图片宽度
      * @param height 要生成的图片高度
      */
-    public static Bitmap getVideoThumbnail(String path, int width, int height) {
+    static Bitmap getVideoThumbnail(String path, int width, int height) {
         Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MINI_KIND);
         // 利用ThumbnailUtils来创建缩略图，这里要指定要缩放哪个Bitmap对象  
         return ThumbnailUtils.extractThumbnail(bitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
@@ -51,14 +60,14 @@ public class Utils {
 	 * @param width 宽度
 	 * @param height 高度
 	 */
-	public static Bitmap extractThumbnail(Bitmap source, int width, int height){
+	static Bitmap extractThumbnail(Bitmap source, int width, int height){
 		return ThumbnailUtils.extractThumbnail(source, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
 	}
 	
     /**
      * 获取Apk文件的图标
      */
-    public static Drawable getApkThumbnail(Context context, String path){
+    static Drawable getApkThumbnail(Context context, String path){
         PackageManager pm = context.getApplicationContext().getPackageManager();
         PackageInfo packageInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
         if (packageInfo != null) {
@@ -74,7 +83,7 @@ public class Utils {
 	/**
 	 * Drawable转Bitmap
 	 */
-	public static Bitmap drawableToBitmap(Drawable drawable){
+	static Bitmap drawableToBitmap(Drawable drawable){
         if (drawable == null) {
             return null;
         }
@@ -99,7 +108,7 @@ public class Utils {
 	 * @param size 文件大小
 	 * @return 字符串形式的大小，包含单位(B,KB,MB,GB,TB,PB)
 	 */
-	public static String formatFileSize(long size) {
+	static String formatFileSize(long size) {
 		DecimalFormat formater = new DecimalFormat("####.00");
 		if (size < 1024L) {
 			return size + " B";
@@ -125,60 +134,173 @@ public class Utils {
         }
         return false;
     }
+
+    static int getStatusBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    /**
+     * 获取存储卡剩余大小
+     */
+    static long getStorageFreeSpace(String path) {
+        if (path != null) {
+            File file = new File(path);
+            if (file.exists()) {
+                StatFs stat = new StatFs(path);
+                return stat.getAvailableBlocksLong() * stat.getBlockSizeLong();
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 存储卡总容量
+     */
+    static long getStorageTotalSpace(String path) {
+        if (path != null) {
+            File file = new File(path);
+            if (file.exists()) {
+                StatFs stat = new StatFs(path);
+                return stat.getBlockSizeLong() * stat.getBlockCountLong();
+            }
+        }
+        return 0;
+    }
     
-	public static boolean isVideo(String path) {
+    static ArrayList<Storage> getStorages(Context context) {
+        StorageManager storageManager = (StorageManager) context.getApplicationContext().getSystemService(Context.STORAGE_SERVICE);
+        try {
+            //得到StorageManager中的getVolumeList()方法的对象
+            Method getVolumeList = storageManager.getClass().getMethod("getVolumeList");
+            //得到StorageVolume类的对象
+            Class<?> storageValumeClazz = Class.forName("android.os.storage.StorageVolume");
+            //获得StorageVolume中的一些方法
+            Method getPath = storageValumeClazz.getMethod("getPath");
+            Method isRemovable = storageValumeClazz.getMethod("isRemovable");
+            Method allowMassStorage = storageValumeClazz.getMethod("allowMassStorage");
+            Method primary = storageValumeClazz.getMethod("isPrimary");
+            Method description = storageValumeClazz.getMethod("getDescription", Context.class);
+
+            Method mGetState = null;
+            //getState 方法是在4.4_r1之后的版本加的，之前版本（含4.4_r1）没有
+            // （http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/4.4_r1/android/os/Environment.java/）
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                try {
+                    mGetState = storageValumeClazz.getMethod("getState");
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //调用getVolumeList方法，参数为：“谁”中调用这个方法
+            Object invokeVolumeList = getVolumeList.invoke(storageManager);
+            int length = Array.getLength(invokeVolumeList);
+            ArrayList<Storage> list = new ArrayList<>();
+            for (int i = 0; i < length; i++) {
+                Object storageValume = Array.get(invokeVolumeList, i);//得到StorageVolume对象
+                String path = (String) getPath.invoke(storageValume);
+                boolean removable = (boolean) isRemovable.invoke(storageValume);
+                boolean isAllowMassStorage = (boolean) allowMassStorage.invoke(storageValume);
+                boolean isPrimary = (boolean) primary.invoke(storageValume);
+                String desc = (String) description.invoke(storageValume, context);
+                String state;
+                if (mGetState != null) {
+                    state = (String) mGetState.invoke(storageValume);
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        state = Environment.getStorageState(new File(path));
+                    } else {
+                        if (removable) {
+                            state = EnvironmentCompat.getStorageState(new File(path));
+                        } else {
+                            //不能移除的存储介质，一直是mounted
+                            state = Environment.MEDIA_MOUNTED;
+                        }
+                    }
+                }
+                long totalSize = 0;
+                long availaleSize = 0;
+                if (Environment.MEDIA_MOUNTED.equals(state)) {
+                    totalSize = getStorageTotalSpace(path);
+                    availaleSize = getStorageFreeSpace(path);
+                }
+                Storage storage = new Storage();
+                storage.availaleSize = availaleSize;
+                storage.totalSize = totalSize;
+                storage.state = state;
+                storage.path = path;
+                storage.isRemovable = removable;
+                storage.description = desc;
+                storage.isAllowMassStorage = isAllowMassStorage;
+                storage.isPrimary = isPrimary;
+                storage.isUsb = desc != null && desc.toLowerCase().contains("usb");
+                list.add(storage);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+	static boolean isVideo(String path) {
 		return isWhat(videoSuffixs, path);
 	}
 
-	public static boolean isImage(String path) {
+	static boolean isImage(String path) {
 		return isWhat(imageSuffixs, path);
 	}
 
-    public static boolean isApk(String path) {
+    static boolean isApk(String path) {
         return path.toLowerCase().endsWith(".apk");
     }
     
-	public static boolean isAudio(String path) {
+	static boolean isAudio(String path) {
         return isWhat(audioSuffixs, path);
     }
     
-    public static boolean isText(String path) {
+    static boolean isText(String path) {
         return path.toLowerCase().endsWith(".txt");
     }
 
-    public static boolean isPdf(String path) {
+    static boolean isPdf(String path) {
         return path.toLowerCase().endsWith(".pdf");
     }
 
-    public static boolean isZip(String path) {
+    static boolean isZip(String path) {
         return isWhat(zipSuffixs, path);
     }
     
-    public static boolean isFlash(String path) {
+    static boolean isFlash(String path) {
 	    return path.toLowerCase().endsWith(".swf") || path.toLowerCase().endsWith(".fla");
     }
 
-    public static boolean isHtml(String path) {
+    static boolean isHtml(String path) {
 	    return isWhat(htmlSuffixs, path);
     }
 
-    public static boolean isPs(String path) {
+    static boolean isPs(String path) {
         return isWhat(psSuffixs, path);
     }
     
-    public static boolean isWord(String path) {
+    static boolean isWord(String path) {
         return isWhat(wordSuffixs, path);
     }
 
-    public static boolean isExcel(String path) {
+    static boolean isExcel(String path) {
         return isWhat(excelSuffixs, path);
     }
 
-    public static boolean isPPT(String path) {
+    static boolean isPPT(String path) {
         return isWhat(pptSuffixs, path);
     }
     
-    public static boolean isDeveloper(String path) {
+    static boolean isDeveloper(String path) {
 	    return isWhat(developerSuffixs, path);
     }
 }

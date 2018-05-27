@@ -31,6 +31,8 @@ public class SelectedItemDialog extends Dialog implements View.OnClickListener {
         Window window = getWindow();
         if (window != null) {
             window.requestFeature(Window.FEATURE_NO_TITLE);
+            //沉浸状态栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setPadding(0, 0, 0, 0);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setWindowAnimations(R.style.DialogAnimFromBottom);
@@ -45,6 +47,10 @@ public class SelectedItemDialog extends Dialog implements View.OnClickListener {
     private View inflateView(Context context) {
         View view = View.inflate(context, R.layout.dialog_selected_item, null);
         tvTitle = view.findViewById(R.id.tvTitle);
+        View statusBar = view.findViewById(R.id.statusBar);
+        ViewGroup.LayoutParams params = statusBar.getLayoutParams();
+        params.height = Utils.getStatusBarHeight(context);
+        statusBar.setLayoutParams(params);
         view.findViewById(R.id.tvClose).setOnClickListener(this);
         view.findViewById(R.id.tvClear).setOnClickListener(this);
         adapter = new FileListAdapter();

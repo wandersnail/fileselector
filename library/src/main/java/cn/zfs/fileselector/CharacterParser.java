@@ -3,7 +3,7 @@ package cn.zfs.fileselector;
 /**
  * Java汉字转换为拼音
  */
-public class CharacterParser {
+class CharacterParser {
     private static int[] pyvalue = new int[]{-20319, -20317, -20304, -20295, -20292, -20283, -20265, -20257, -20242,
             -20230, -20051, -20036, -20032, -20026, -20002, -19990, -19986, -19982, -19976, -19805, -19784, -19775,
             -19774, -19763, -19756, -19751, -19746, -19741, -19739, -19728, -19725, -19715, -19540, -19531, -19525,
@@ -35,7 +35,7 @@ public class CharacterParser {
             -11055, -11052, -11045, -11041, -11038, -11024, -11020, -11019, -11018, -11014, -10838, -10832, -10815,
             -10800, -10790, -10780, -10764, -10587, -10544, -10533, -10519, -10331, -10329, -10328, -10322, -10315,
             -10309, -10307, -10296, -10281, -10274, -10270, -10262, -10260, -10256, -10254};
-    public static String[] pystr = new String[]{"a", "ai", "an", "ang", "ao", "ba", "bai", "ban", "bang", "bao",
+    private static String[] pystr = new String[]{"a", "ai", "an", "ang", "ao", "ba", "bai", "ban", "bang", "bao",
             "bei", "ben", "beng", "bi", "bian", "biao", "bie", "bin", "bing", "bo", "bu", "ca", "cai", "can", "cang",
             "cao", "ce", "ceng", "cha", "chai", "chan", "chang", "chao", "che", "chen", "cheng", "chi", "chong", "chou",
             "chu", "chuai", "chuan", "chuang", "chui", "chun", "chuo", "ci", "cong", "cou", "cu", "cuan", "cui", "cun",
@@ -91,7 +91,7 @@ public class CharacterParser {
      * @param str 待解析
      * @return 返回字母
      */
-    public static String convert(String str) {
+    static String convert(String str) {
         String result = null;
         int ascii = getChsAscii(str);
         if (ascii > 0 && ascii < 160) {
@@ -112,7 +112,7 @@ public class CharacterParser {
      * @param chs 待解析
      * @return 返回拼音
      */
-    public static String getSelling(String chs) {
+    static String getSelling(String chs) {
         String key, value;
         StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < chs.length(); i++) {

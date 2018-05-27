@@ -4,21 +4,21 @@
         <shape>
             <corners android:radius="30dp"/>
             <size android:height="30dp"/>
-            <solid android:color="@color/colorPrimaryDark"/>
+            <solid android:color="@color/fsColorPrimary"/>
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape>
             <corners android:radius="30dp"/>
             <size android:height="30dp"/>
-            <solid android:color="@color/edit_hint"/>
+            <solid android:color="@color/fsEditHint"/>
         </shape>
     </item>
     <item>
         <shape>
             <corners android:radius="30dp"/>
             <size android:height="30dp"/>
-            <solid android:color="@color/colorPrimary"/>
+            <solid android:color="@color/fsColorPrimary"/>
         </shape>
     </item>
 </selector>

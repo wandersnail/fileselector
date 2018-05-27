@@ -5,14 +5,12 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
@@ -38,13 +36,13 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     private static final String EXTRA_IS_MULTI_SELECT = "IS_MULTI_SELECT";
     private static final String EXTRA_SCREEN_ORIENTATION = "SCREEN_ORIENTATION";
     private static final String EXTRA_ROOT_DIR = "ROOT_DIR";
-    public static final String EXTRA_SELECTED_FILE_LIST = "SELECTED_FILE_LIST";
-    public static final String EXTRA_SELECTED_FILE = "SELECTED_FILE";
+    public static final String EXTRA_SELECTED_FILE_PATH_LIST = "SELECTED_FILE_LIST";
 
     private ListView lv;
     private TextView tvSelected;
     private LinearLayout dirContainer;
     private HorizontalScrollView scrollView;
+    private TextView tvAll;
 
     private boolean isSlectFile;
     private boolean isMultiSelect;
@@ -57,6 +55,8 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     private FileListAdapter adapter;
     private SelectedItemDialog selectedItemDialog;
     private TextView tvOk;
+    private String currentPath;//当前路径
+    private List<File> rootFiles = new ArrayList<>();
 
     /**
      * 启动Activity
@@ -109,6 +109,8 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //沉浸状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getDataFromIntent();
         setContentView(R.layout.activity_select_file);        
         initViews();
@@ -127,9 +129,25 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
             TextView tv = child.findViewById(R.id.tv);
             DirCell cell = (DirCell) tv.getTag();
             dirContainer.removeView(child);
-            loadFiles(cell.location.getParentFile());
+            if (rootFiles.isEmpty()) {
+                loadFiles(cell.location.getParentFile());
+            } else {
+                boolean isSecondLast = false;
+                for (File file : rootFiles) {
+                    if (cell.location.equals(file)) {
+                        isSecondLast = true;
+                        loadFiles(null);
+                        break;
+                    }
+                }
+                if (!isSecondLast) {
+                    loadFiles(cell.location.getParentFile());
+                }
+            }
             int[] ints = posList.remove(posList.size() - 1);
             lv.setSelectionFromTop(ints[0], ints[1]);
+        } else if (rootFile == null && currentPath != null) {
+            loadFiles(null);
         } else {
             super.onBackPressed();
         }
@@ -148,13 +166,22 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     private void initViews() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.hide();
         }
-        setTitle(R.string.all_files);
+        View statusBar = findViewById(R.id.statusBar);
+        ViewGroup.LayoutParams params = statusBar.getLayoutParams();
+        params.height = Utils.getStatusBarHeight(this);
+        statusBar.setLayoutParams(params);
         dirContainer = findViewById(R.id.dirContainer);
+        scrollView = findViewById(R.id.scrollView);
+        TextView tvTitle = findViewById(R.id.tvTitle);
+        tvAll = findViewById(R.id.tvAll);
+        findViewById(R.id.ivBack).setOnClickListener(this);
+        tvAll.setOnClickListener(this);
         scrollView = findViewById(R.id.scrollView);
         TextView tvRoot = findViewById(R.id.tvRoot);
         lv = findViewById(R.id.lv);
+        tvTitle.setText(R.string.all_files);
         tvSelected = findViewById(R.id.tvSelected);
         tvSelected.setOnClickListener(this);
         tvOk = findViewById(R.id.tvOk);
@@ -167,25 +194,6 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
         lv.setOnItemClickListener(this);     
         tvRoot.setOnClickListener(this);
         loadFiles(rootFile);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.menuSelecteAll);
-        item.setVisible(isMultiSelect);
-        item.setTitle(isSelectedAll ? R.string.all_not_select : R.string.select_all);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menuSelecteAll) {
-            switchSelectAll(!isSelectedAll);
-        } else if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-        return true;
     }
 
     private void getDataFromIntent() {
@@ -201,41 +209,55 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
 		if (rootFile == null) {
 			if (ShellUtils.hasRootPermission()) {
 				rootFile = new File("/");
-			} else {
-				rootFile = Environment.getExternalStorageDirectory();
 			}
 		}
     }
 
     private void loadFiles(File dir) {
+        currentPath = dir == null ? null : dir.getAbsolutePath();
         itemList.clear();
-        List<File> dirList = new ArrayList<>();
-        List<File> fList = new ArrayList<>();
-        File[] files;
-        if (filenameFilter != null) {
-            files = dir.listFiles(filenameFilter);
+        List<Item> dirList = new ArrayList<>();
+        List<Item> fList = new ArrayList<>();
+        if (dir == null) {
+            rootFiles.clear();
+            ArrayList<Storage> list = Utils.getStorages(this);
+            if (list != null) {
+                for (Storage storage : list) {
+                    File file = new File(storage.path);
+                    rootFiles.add(file);
+                    dirList.add(new Item(storage.description, file, isSelectedItem(file)));
+                }
+            }
         } else {
-            files = dir.listFiles();
-        }
-        if (files != null) {
-            for (File file : files) {
-                if (isSlectFile) {
-                    if (file.isDirectory()) {
-                        dirList.add(file);
+            File[] files;
+            if (filenameFilter != null) {
+                files = dir.listFiles(filenameFilter);
+            } else {
+                files = dir.listFiles();
+            }
+            if (files != null) {
+                for (File file : files) {
+                    if (isSlectFile) {
+                        if (file.isDirectory()) {
+                            dirList.add(new Item(file, isSelectedItem(file)));
+                        } else {
+                            fList.add(new Item(file, isSelectedItem(file)));
+                        }
                     } else {
-                        fList.add(file);
-                    }
-                } else {
-                    if (file.isDirectory()) {
-                        dirList.add(file);
+                        if (file.isDirectory()) {
+                            dirList.add(new Item(file, isSelectedItem(file)));
+                        }
                     }
                 }
             }
-			Collections.sort(dirList, comparator);
-			Collections.sort(fList, comparator);
-            addFileList(dirList);
-            addFileList(fList);
         }
+        Collections.sort(dirList, comparator);
+        Collections.sort(fList, comparator);
+        itemList.addAll(dirList);
+        itemList.addAll(fList);
+        
+        //只有多选，并且当选择文件时，文件列表不为空，当选择文件夹时，文件夹列表不为空
+        tvAll.setVisibility(isMultiSelect && ((isSlectFile && !fList.isEmpty()) || (!isSlectFile && !dirList.isEmpty())) ? View.VISIBLE : View.INVISIBLE);
         adapter.notifyDataSetChanged();
         scrollView.post(new Runnable() {
             @Override
@@ -245,30 +267,23 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-	private Comparator<File> comparator = new Comparator<File>() {
+	private Comparator<Item> comparator = new Comparator<Item>() {
 		@Override
-		public int compare(File o1, File o2) {
+		public int compare(Item o1, Item o2) {
 			if (o1 == null) {
 				return -1;
 			}
 			if (o2 == null) {
 				return 1;
 			}
-			return o1.getName().compareToIgnoreCase(o2.getName());
+			return o1.file.getName().compareToIgnoreCase(o2.file.getName());
 		}
 	};
     
-    //生成Item添加到列表
-    private void addFileList(List<File> files) {
-        for (File file : files) {
-            itemList.add(new Item(file, isSelectedItem(file.getAbsolutePath())));
-        }
-    }
-
     //是否已被选
-    private boolean isSelectedItem(String path) {
+    private boolean isSelectedItem(File file) {
         for (Item item : selectItemList) {
-            if (item.file.getAbsolutePath().equals(path)) {
+            if (item.file.equals(file)) {
                 return true;
             }
         }
@@ -280,7 +295,7 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
         switchSelectAllState(enable);
         for (Item item : itemList) {
             //只全选指定类型
-            if ((item.file.isDirectory() && !isSlectFile) || (item.file.isFile() && isSlectFile)) {
+            if ((item.file.isDirectory() && !isSlectFile) || (item.file.isFile() && isSlectFile) || (currentPath == null && !isSlectFile)) {
                 item.checked = enable;
                 updateSelectedFileList(item);
             }
@@ -291,7 +306,8 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     //清除全选状态，更新标题栏按钮文本
     private void switchSelectAllState(boolean selectAll) {
         isSelectedAll = selectAll;
-        invalidateOptionsMenu();
+        tvAll.setVisibility(isMultiSelect ? View.VISIBLE : View.INVISIBLE);
+        tvAll.setText(isSelectedAll ? R.string.all_not_select : R.string.select_all);
     }
 
     private void updateSelectedText() {
@@ -305,14 +321,15 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
             selectedItemDialog.show();
         } else if (v.getId() == R.id.tvOk) {            
             Intent intent = new Intent();
+            ArrayList<String> pathList = new ArrayList<>();
             if (isMultiSelect) {
-                ArrayList<File> fileList = new ArrayList<>();
                 for (Item item : selectItemList) {
-                    fileList.add(item.file);
+                    pathList.add(item.file.getAbsolutePath());
                 }
-                intent.putExtra(EXTRA_SELECTED_FILE_LIST, fileList);
+                intent.putExtra(EXTRA_SELECTED_FILE_PATH_LIST, pathList);
             } else {
-                intent.putExtra(EXTRA_SELECTED_FILE, selectItemList.get(0).file);
+                pathList.add(selectItemList.get(0).file.getAbsolutePath());
+                intent.putExtra(EXTRA_SELECTED_FILE_PATH_LIST, pathList);
             }
             setResult(RESULT_OK, intent);
             finish();
@@ -336,26 +353,36 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
             loadFiles(cell.location);
             lv.setSelectionFromTop(ints[0], ints[1]);
         } else if (v.getId() == R.id.tvRoot) {
-            if (dirContainer.getChildCount() > 0) {
-                loadFiles(rootFile);
-                int[] ints = posList.remove(0);
-                lv.setSelectionFromTop(ints[0], ints[1]);
+            if (rootFile != null) {
+                if (dirContainer.getChildCount() > 0) {
+                    loadFiles(rootFile);
+                    int[] ints = posList.remove(0);
+                    lv.setSelectionFromTop(ints[0], ints[1]);
+                    posList.clear();
+                    dirContainer.removeAllViews();
+                }
+            } else {
+                loadFiles(null);
                 posList.clear();
                 dirContainer.removeAllViews();
             }
+        } else if (v.getId() == R.id.tvAll) {
+            switchSelectAll(!isSelectedAll);
+        } else if (v.getId() == R.id.ivBack) {
+            onBackPressed();
         }
     }    
     
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Item item = itemList.get(position);
-        if (item.file.isDirectory()) {
+        if (item.file.isDirectory() || currentPath == null) {
             switchSelectAllState(false);
+            loadFiles(item.file);
             //记录点击条目所在文件夹的文件列表滚动到的位置
             posList.add(new int[]{lv.getFirstVisiblePosition(), lv.getChildAt(0).getTop()});
             //添加导航文件夹
             addDir(item.file);
-            loadFiles(item.file);
             //进入的时候重置回到顶端位置
             lv.setSelectionFromTop(0, 0);
         } else if (isSlectFile) {
@@ -415,9 +442,13 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
             }
             Item item = getItem(position);
             holder.position = position;
-            holder.tvName.setText(item.file.getName());
+            if (currentPath == null) {
+                holder.tvName.setText(item.desc);
+            } else {
+                holder.tvName.setText(item.file.getName());
+            }
             String path = item.file.getAbsolutePath();
-            if (item.file.isDirectory()) {
+            if (item.file.isDirectory() || currentPath == null) {
                 //选择文件时，不可点击，不显示选框
                 holder.chkView.setClickable(!isSlectFile);
                 holder.chkBox.setVisibility(isSlectFile ? View.INVISIBLE : View.VISIBLE);
@@ -500,7 +531,13 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
             if (!selectItemList.contains(item)) {
                 //如果是单选，把已选的删除
                 if (!isMultiSelect && !selectItemList.isEmpty()) {
-                    selectItemList.remove(0).checked = false;                    
+                    Item removeItem = selectItemList.remove(0);
+                    for (Item i : itemList) {
+                        if (i.equals(removeItem)) {
+                            i.checked = false;
+                            break;
+                        }
+                    }
                 }
                 selectItemList.add(item);
             }
@@ -508,13 +545,13 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
             selectItemList.remove(item);
         }
         updateViews();
-        int count = 0;
+        boolean b = true;
         for (Item i : itemList) {
-            if (i.file.isFile()) {
-                count++;
+            if (((isSlectFile && i.file.isFile()) || (!isSlectFile && i.file.isDirectory())) && !selectItemList.contains(i)) {
+                b = false;
             }
         }
-        if (count > 0 && selectItemList.size() == count) {
+        if (b) {
             switchSelectAllState(true);
         } else {
             switchSelectAllState(false);
