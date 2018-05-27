@@ -46,7 +46,7 @@
 	    }
 	}
 
-![image](https://github.com/fszeng2011/fileselector/screenshot/blob/master/device-2018-05-27-165915.png)
-![image](https://github.com/fszeng2011/fileselector/screenshot/blob/master/device-2018-05-27-170008.png)
-![image](https://github.com/fszeng2011/fileselector/screenshot/blob/master/device-2018-05-27-170035.png)
-![image](https://github.com/fszeng2011/fileselector/screenshot/blob/master/device-2018-05-27-162627.png)
+![image](https://github.com/fszeng2011/fileselector/blob/master/screenshot/device-2018-05-27-165915.png)
+![image](https://github.com/fszeng2011/fileselector/blob/master/screenshot/device-2018-05-27-170008.png)
+![image](https://github.com/fszeng2011/fileselector/blob/master/screenshot/device-2018-05-27-170035.png)
+![image](https://github.com/fszeng2011/fileselector/blob/master/screenshot/device-2018-05-27-162627.png)
