@@ -1,7 +1,5 @@
 package cn.zfs.fileselector;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -21,7 +19,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,11 +29,12 @@ import java.util.List;
  */
 
 public class SelectFileActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    private static final String EXTRA_IS_SELECT_FILE = "IS_SELECT_FILE";
-    private static final String EXTRA_IS_MULTI_SELECT = "IS_MULTI_SELECT";
-    private static final String EXTRA_SCREEN_ORIENTATION = "SCREEN_ORIENTATION";
-    private static final String EXTRA_ROOT_DIR = "ROOT_DIR";
-    public static final String EXTRA_SELECTED_FILE_PATH_LIST = "SELECTED_FILE_LIST";
+    static final String EXTRA_IS_SELECT_FILE = "IS_SELECT_FILE";
+    static final String EXTRA_IS_MULTI_SELECT = "IS_MULTI_SELECT";
+    static final String EXTRA_IS_LANDSCAPE = "SCREEN_ORIENTATION";
+    static final String EXTRA_ROOT = "ROOT";
+    static final String EXTRA_SELECTED_FILE_PATH_LIST = "SELECTED_FILE_LIST";
+    static final String EXTRA_FILENAME_FILTER = "FILENAME_FILTER";
 
     private ListView lv;
     private TextView tvSelected;
@@ -46,7 +44,7 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
 
     private boolean isSlectFile;
     private boolean isMultiSelect;
-    private static FilenameFilter filenameFilter;
+    private FilenameFilter filenameFilter;
     private List<int[]> posList = new ArrayList<>();
     private List<Item> itemList = new ArrayList<>();
     private List<Item> selectItemList = new ArrayList<>();
@@ -58,54 +56,6 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     private String currentPath;//当前路径
     private List<File> rootFiles = new ArrayList<>();
 
-    /**
-     * 启动Activity
-     *
-     * @param activity          用于启动Activity的上下文
-     * @param screenOrientation 屏幕方向
-     * @param requestCode       请求码
-	 * @param rootDir          根目录                   
-     * @param isSelectFile      是否选择文件
-     * @param isMultiSelect     是否多选。只支持文件选择
-     * @param filenameFilter    文件过滤器
-     */
-    public static void startForResult(Activity activity, int screenOrientation, int requestCode, File rootDir, boolean isSelectFile,
-                                      boolean isMultiSelect, FilenameFilter filenameFilter) {
-        SelectFileActivity.filenameFilter = filenameFilter;
-        Intent intent = new Intent(activity, SelectFileActivity.class);
-        intent.putExtra(EXTRA_SCREEN_ORIENTATION, screenOrientation);
-        intent.putExtra(EXTRA_IS_SELECT_FILE, isSelectFile);
-        intent.putExtra(EXTRA_IS_MULTI_SELECT, isMultiSelect);
-        if (rootDir != null) {
-			intent.putExtra(EXTRA_ROOT_DIR, rootDir);
-        }
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    /**
-     * 启动Activity
-     *
-     * @param fragment          用于启动Activity的上下文
-     * @param screenOrientation 屏幕方向
-     * @param requestCode       请求码
-	 * @param rootDir          根目录   
-     * @param isSelectFile      是否选择文件
-     * @param isMultiSelect     是否多选。只支持文件选择
-     * @param filenameFilter    文件过滤器
-     */
-    public static void startForResult(Fragment fragment, int screenOrientation, int requestCode, File rootDir, boolean isSelectFile,
-                                      boolean isMultiSelect, FilenameFilter filenameFilter) {
-        SelectFileActivity.filenameFilter = filenameFilter;
-        Intent intent = new Intent(fragment.getActivity(), SelectFileActivity.class);
-        intent.putExtra(EXTRA_SCREEN_ORIENTATION, screenOrientation);
-        intent.putExtra(EXTRA_IS_SELECT_FILE, isSelectFile);
-        intent.putExtra(EXTRA_IS_MULTI_SELECT, isMultiSelect);
-		if (rootDir != null) {
-			intent.putExtra(EXTRA_ROOT_DIR, rootDir);
-		}
-        fragment.startActivityForResult(intent, requestCode);
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,12 +64,6 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
         getDataFromIntent();
         setContentView(R.layout.activity_select_file);        
         initViews();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        filenameFilter = null;
     }
 
     @Override
@@ -173,7 +117,6 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
         params.height = Utils.getStatusBarHeight(this);
         statusBar.setLayoutParams(params);
         dirContainer = findViewById(R.id.dirContainer);
-        scrollView = findViewById(R.id.scrollView);
         TextView tvTitle = findViewById(R.id.tvTitle);
         tvAll = findViewById(R.id.tvAll);
         findViewById(R.id.ivBack).setOnClickListener(this);
@@ -199,13 +142,13 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     private void getDataFromIntent() {
         isSlectFile = getIntent().getBooleanExtra(EXTRA_IS_SELECT_FILE, false);
         isMultiSelect = getIntent().getBooleanExtra(EXTRA_IS_MULTI_SELECT, false);
-        int orientation = getIntent().getIntExtra(EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        filenameFilter = (FilenameFilter) getIntent().getSerializableExtra(EXTRA_FILENAME_FILTER);
+        if (getIntent().getBooleanExtra(EXTRA_IS_LANDSCAPE, false)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-        rootFile = (File) getIntent().getSerializableExtra(EXTRA_ROOT_DIR);
+        rootFile = (File) getIntent().getSerializableExtra(EXTRA_ROOT);
 		if (rootFile == null) {
 			if (ShellUtils.hasRootPermission()) {
 				rootFile = new File("/");

@@ -19,7 +19,7 @@ import java.util.List;
  * Created by zeng on 2017/3/2.
  */
 
-public class SelectedItemDialog extends Dialog implements View.OnClickListener {
+class SelectedItemDialog extends Dialog implements View.OnClickListener {
     private TextView tvTitle;
     private FileListAdapter adapter;
     private List<Item> itemList = new ArrayList<>();

@@ -1,55 +1,56 @@
 package cn.zfs.fileselectorexample
 
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Environment
-import cn.zfs.fileselector.SelectFileActivity
+import cn.zfs.fileselector.FileSelector
+import cn.zfs.fileselector.FilenameFilter
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 class MainActivity : CheckPermissionsActivity() {
-    companion object {
-        private const val REQUEST_SELECT_FILE_CODE = 100
-    }
-
+    private var selector: FileSelector? = null
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        selector = FileSelector().setScreenOrientation(false)
+                .setFilenameFilter(object : FilenameFilter() {
+            override fun accept(dir: File?, name: String?): Boolean {
+                return name != null && !name.startsWith(".")
+            }
+        })
+        //设置根目录，如果不设置，默认列出所有存储路径作为根目录
+//        selector!!.setRoot(Environment.getExternalStorageDirectory())
         btnSelectMultiFile.setOnClickListener {
-            SelectFileActivity.startForResult(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, REQUEST_SELECT_FILE_CODE,
-                    null, true, true, { dir, name ->
-                !name.startsWith(".")
-            })
+            selector!!.setMultiSelect(true)
+            selector!!.setSelectFile(true)
+            selector!!.select(this)
         }
         btnSelectSingleFile.setOnClickListener {
-            SelectFileActivity.startForResult(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, REQUEST_SELECT_FILE_CODE,
-                    Environment.getExternalStorageDirectory(), true, false, { dir, name ->
-                !name.startsWith(".")
-            })
+            selector!!.setMultiSelect(false)
+            selector!!.setSelectFile(true)
+            selector!!.select(this)
         }
         btnSelectSingleDir.setOnClickListener {
-            SelectFileActivity.startForResult(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, REQUEST_SELECT_FILE_CODE,
-                    null, false, false, { dir, name ->
-                !name.startsWith(".")
-            })
+            selector!!.setSelectFile(false)
+            selector!!.setMultiSelect(false)
+            selector!!.select(this)
         }
         btnSelectMultiDir.setOnClickListener {
-            SelectFileActivity.startForResult(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, REQUEST_SELECT_FILE_CODE,
-                    null, false, true, { dir, name ->
-                !name.startsWith(".")
-            })
+            selector!!.setMultiSelect(true)
+            selector!!.setSelectFile(false)
+            selector!!.select(this)
+        }
+        selector!!.setOnFileSelectListener {
+            tvResult.text = ""
+            it.forEach {
+                tvResult.append("$it\n")
+            }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_SELECT_FILE_CODE && resultCode == Activity.RESULT_OK) {
-            val filePaths = data?.getCharSequenceArrayListExtra(SelectFileActivity.EXTRA_SELECTED_FILE_PATH_LIST)
-            tvResult.text = ""
-            filePaths!!.forEach { 
-                tvResult.append("$it\n")
-            }
-        }
+        selector?.onActivityResult(requestCode, resultCode, data)
     }
 }
