@@ -44,7 +44,7 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
 
     private boolean isSlectFile;
     private boolean isMultiSelect;
-    private FilenameFilter filenameFilter;
+    private MyFilter filenameFilter;
     private List<int[]> posList = new ArrayList<>();
     private List<Item> itemList = new ArrayList<>();
     private List<Item> selectItemList = new ArrayList<>();
@@ -142,7 +142,10 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     private void getDataFromIntent() {
         isSlectFile = getIntent().getBooleanExtra(EXTRA_IS_SELECT_FILE, false);
         isMultiSelect = getIntent().getBooleanExtra(EXTRA_IS_MULTI_SELECT, false);
-        filenameFilter = (FilenameFilter) getIntent().getSerializableExtra(EXTRA_FILENAME_FILTER);
+        FilenameFilter filter = getIntent().getParcelableExtra(EXTRA_FILENAME_FILTER);
+        if (filter != null) {
+            filenameFilter = new MyFilter(filter);
+        }
         if (getIntent().getBooleanExtra(EXTRA_IS_LANDSCAPE, false)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
@@ -156,6 +159,19 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
 		}
     }
 
+    private static class MyFilter implements java.io.FilenameFilter {
+        private FilenameFilter filter;
+
+        MyFilter(FilenameFilter filter) {
+            this.filter = filter;
+        }
+
+        @Override
+        public boolean accept(File dir, String name) {
+            return filter.accept(dir, name);
+        }
+    }
+    
     private void loadFiles(File dir) {
         currentPath = dir == null ? null : dir.getAbsolutePath();
         itemList.clear();

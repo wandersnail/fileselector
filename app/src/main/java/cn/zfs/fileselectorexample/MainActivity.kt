@@ -15,9 +15,9 @@ class MainActivity : CheckPermissionsActivity() {
         setContentView(R.layout.activity_main)
         selector = FileSelector().setScreenOrientation(false)
                 .setFilenameFilter(object : FilenameFilter() {
-            override fun accept(dir: File?, name: String?): Boolean {
-                return name != null && !name.startsWith(".")
-            }
+                    override fun accept(dir: File?, name: String?): Boolean {
+                        return name != null && !name.startsWith(".")
+                    }
         })
         //设置根目录，如果不设置，默认列出所有存储路径作为根目录
 //        selector!!.setRoot(Environment.getExternalStorageDirectory())
