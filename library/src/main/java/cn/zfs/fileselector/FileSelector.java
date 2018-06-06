@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 /**
  * 描述:
@@ -81,13 +82,11 @@ public class FileSelector {
     }
 
     private Intent obtainIntent(Context context, Class<?> cls) {
+        SelectFileActivity.filenameFilter = filenameFilter;
         Intent intent = new Intent(context, cls);
         intent.putExtra(SelectFileActivity.EXTRA_IS_LANDSCAPE, isLandscape);
         intent.putExtra(SelectFileActivity.EXTRA_IS_SELECT_FILE, isSelectFile);
         intent.putExtra(SelectFileActivity.EXTRA_IS_MULTI_SELECT, isMultiSelect);
-        if (filenameFilter != null) {
-            intent.putExtra(SelectFileActivity.EXTRA_FILENAME_FILTER, filenameFilter);
-        }
         if (root != null) {
             intent.putExtra(SelectFileActivity.EXTRA_ROOT, root);
         }

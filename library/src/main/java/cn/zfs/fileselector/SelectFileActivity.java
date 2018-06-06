@@ -19,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,7 +35,6 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     static final String EXTRA_IS_LANDSCAPE = "SCREEN_ORIENTATION";
     static final String EXTRA_ROOT = "ROOT";
     static final String EXTRA_SELECTED_FILE_PATH_LIST = "SELECTED_FILE_LIST";
-    static final String EXTRA_FILENAME_FILTER = "FILENAME_FILTER";
 
     private ListView lv;
     private TextView tvSelected;
@@ -44,7 +44,7 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
 
     private boolean isSlectFile;
     private boolean isMultiSelect;
-    private MyFilter filenameFilter;
+    static FilenameFilter filenameFilter;
     private List<int[]> posList = new ArrayList<>();
     private List<Item> itemList = new ArrayList<>();
     private List<Item> selectItemList = new ArrayList<>();
@@ -64,6 +64,12 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
         getDataFromIntent();
         setContentView(R.layout.activity_select_file);        
         initViews();
+    }
+
+    @Override
+    protected void onDestroy() {
+        filenameFilter = null;
+        super.onDestroy();
     }
 
     @Override
@@ -142,10 +148,6 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     private void getDataFromIntent() {
         isSlectFile = getIntent().getBooleanExtra(EXTRA_IS_SELECT_FILE, false);
         isMultiSelect = getIntent().getBooleanExtra(EXTRA_IS_MULTI_SELECT, false);
-        FilenameFilter filter = getIntent().getParcelableExtra(EXTRA_FILENAME_FILTER);
-        if (filter != null) {
-            filenameFilter = new MyFilter(filter);
-        }
         if (getIntent().getBooleanExtra(EXTRA_IS_LANDSCAPE, false)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
@@ -157,19 +159,6 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
 				rootFile = new File("/");
 			}
 		}
-    }
-
-    private static class MyFilter implements java.io.FilenameFilter {
-        private FilenameFilter filter;
-
-        MyFilter(FilenameFilter filter) {
-            this.filter = filter;
-        }
-
-        @Override
-        public boolean accept(File dir, String name) {
-            return filter.accept(dir, name);
-        }
     }
     
     private void loadFiles(File dir) {
