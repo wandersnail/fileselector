@@ -35,6 +35,7 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     static final String EXTRA_IS_LANDSCAPE = "SCREEN_ORIENTATION";
     static final String EXTRA_ROOT = "ROOT";
     static final String EXTRA_SELECTED_FILE_PATH_LIST = "SELECTED_FILE_LIST";
+    static final String EXTRA_TITLE = "TITLE";
 
     private ListView lv;
     private TextView tvSelected;
@@ -55,6 +56,7 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     private TextView tvOk;
     private String currentPath;//当前路径
     private List<File> rootFiles = new ArrayList<>();
+    private String title;//标题
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,7 +132,11 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
         scrollView = findViewById(R.id.scrollView);
         TextView tvRoot = findViewById(R.id.tvRoot);
         lv = findViewById(R.id.lv);
-        tvTitle.setText(R.string.all_files);
+        if (title == null) {
+            tvTitle.setText(R.string.all_files);
+        } else {
+            tvTitle.setText(title);
+        }
         tvSelected = findViewById(R.id.tvSelected);
         tvSelected.setOnClickListener(this);
         tvOk = findViewById(R.id.tvOk);
@@ -159,6 +165,7 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
 				rootFile = new File("/");
 			}
 		}
+		title = getIntent().getStringExtra(EXTRA_TITLE);
     }
     
     private void loadFiles(File dir) {

@@ -37,6 +37,7 @@ class MainActivity : CheckPermissionsActivity() {
             selector!!.setSelectFile(false)
             selector!!.select(this)
         }
+        selector!!.setTitle("test")
         selector!!.setOnFileSelectListener {
             tvResult.text = ""
             it.forEach {

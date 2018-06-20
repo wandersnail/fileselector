@@ -21,6 +21,7 @@ public class FileSelector {
     private boolean isSelectFile;
     private boolean isMultiSelect;
     private FilenameFilter filenameFilter;
+    private String title;
     
     public FileSelector setRoot(File root) {
         this.root = root;
@@ -68,6 +69,14 @@ public class FileSelector {
     }
 
     /**
+     * 设置标题
+     */
+    public FileSelector setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    /**
      * 开始选择
      */
     public void select(Activity activity) {
@@ -87,6 +96,9 @@ public class FileSelector {
         intent.putExtra(SelectFileActivity.EXTRA_IS_LANDSCAPE, isLandscape);
         intent.putExtra(SelectFileActivity.EXTRA_IS_SELECT_FILE, isSelectFile);
         intent.putExtra(SelectFileActivity.EXTRA_IS_MULTI_SELECT, isMultiSelect);
+        if (title != null) {
+            intent.putExtra(SelectFileActivity.EXTRA_TITLE, title);
+        }
         if (root != null) {
             intent.putExtra(SelectFileActivity.EXTRA_ROOT, root);
         }
