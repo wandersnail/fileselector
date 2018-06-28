@@ -53,7 +53,7 @@
 	}
 	
 ## 代码托管
-[![JitPack](https://img.shields.io/badge/JitPack-fileselector-green.svg?style=flat)](https://jitpack.io/#fszeng2011/fileselector)
+[![](https://jitpack.io/v/fszeng2011/fileselector.svg)](https://jitpack.io/#fszeng2011/fileselector)
 [![Download](https://api.bintray.com/packages/fszeng2017/maven/fileselector/images/download.svg) ](https://bintray.com/fszeng2017/maven/fileselector/_latestVersion)
 [![JCenter](https://img.shields.io/badge/JCenter-1.1.5-green.svg?style=flat)](http://jcenter.bintray.com/com/github/fszeng2011/fileselector/1.1.5/)
 
