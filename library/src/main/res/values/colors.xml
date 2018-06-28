@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="fsColorPrimary">#588DFF</color>
-    <color name="fsColorPrimaryDark">#4F7EE4</color>
+    <color name="fsColorPrimary">#4C61D9</color>
+    <color name="fsColorPrimaryDark">#3F51B5</color>
 	<color name="fsMainBg">#F7F8FB</color>
     <color name="fsTransparent">#00000000</color>
     <color name="fsWhite">#FFFFFF</color>

@@ -7,12 +7,11 @@
 
     <View
         android:id="@+id/statusBar"
-        android:background="@color/fsColorPrimary"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
     
     <RelativeLayout
-        android:background="@color/fsColorPrimary"
+        android:id="@+id/layoutTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <TextView

@@ -46,8 +46,11 @@ class SelectedItemDialog extends Dialog implements View.OnClickListener {
 
     private View inflateView(Context context) {
         View view = View.inflate(context, R.layout.dialog_selected_item, null);
+        View layoutTitle = view.findViewById(R.id.layoutTitle);
+        layoutTitle.setBackgroundColor(Utils.getPrimaryColor(context));        
         tvTitle = view.findViewById(R.id.tvTitle);
         View statusBar = view.findViewById(R.id.statusBar);
+        statusBar.setBackgroundColor(Utils.getPrimaryColor(context));
         ViewGroup.LayoutParams params = statusBar.getLayoutParams();
         params.height = Utils.getStatusBarHeight(context);
         statusBar.setLayoutParams(params);

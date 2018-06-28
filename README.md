@@ -1,7 +1,7 @@
 # 使用方法
 	
 	dependencies {
-		implementation 'com.github.fszeng2011:fileselector:1.1.6'
+		implementation 'com.github.fszeng2011:fileselector:1.1.7'
 	}
 
     class MainActivity : CheckPermissionsActivity() {

@@ -2,6 +2,7 @@ package cn.zfs.fileselector;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -121,6 +122,8 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
             actionBar.hide();
         }
         View statusBar = findViewById(R.id.statusBar);
+        statusBar.setBackgroundColor(Utils.getPrimaryColor(this));
+        findViewById(R.id.layoutTitle).setBackgroundColor(Utils.getPrimaryColor(this));
         ViewGroup.LayoutParams params = statusBar.getLayoutParams();
         params.height = Utils.getStatusBarHeight(this);
         statusBar.setLayoutParams(params);
@@ -138,8 +141,11 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
             tvTitle.setText(title);
         }
         tvSelected = findViewById(R.id.tvSelected);
+        tvSelected.setBackground(Utils.getFrameBlueBg(this));
+        tvSelected.setTextColor(Utils.createColorStateList(Utils.getPrimaryColor(this), Color.WHITE));
         tvSelected.setOnClickListener(this);
         tvOk = findViewById(R.id.tvOk);
+        tvOk.setBackground(Utils.getFillBlueBg(this));
         tvOk.setOnClickListener(this);
         tvOk.setEnabled(false);
         updateSelectedText();

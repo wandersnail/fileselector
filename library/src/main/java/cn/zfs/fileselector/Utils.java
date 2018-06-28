@@ -4,17 +4,22 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.os.storage.StorageManager;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.os.EnvironmentCompat;
+import android.util.TypedValue;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -170,6 +175,82 @@ class Utils {
             }
         }
         return 0;
+    }
+    
+    static int getPrimaryColor(Context context) {
+        TypedValue typedValue = new TypedValue();
+        boolean found = false;
+        try {
+            int resId = Class.forName(context.getPackageName() + ".R$attr").getField("colorPrimary").getInt(null);
+            if (resId > 0) {
+                found = context.getTheme().resolveAttribute(resId, typedValue, true);
+            }
+        } catch (Exception ignored) {}
+        return found ? typedValue.data : ContextCompat.getColor(context, R.color.fsColorPrimary);
+    }
+
+    static int getPrimaryDarkColor(Context context) {
+        TypedValue typedValue = new TypedValue();
+        boolean found = false;
+        try {
+            int resId = Class.forName(context.getPackageName() + ".R$attr").getField("colorPrimaryDark").getInt(null);
+            if (resId > 0) {
+                found = context.getTheme().resolveAttribute(resId, typedValue, true);
+            }
+        } catch (Exception ignored) {}
+        return found ? typedValue.data : ContextCompat.getColor(context, R.color.fsColorPrimaryDark);
+    }
+
+    /**
+     * 根据手机的分辨率从 dip 的单位 转成为 px(像素)
+     */
+    static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+    
+    static Drawable getShape(Context context, int color, int strokeWidth, int strokeColor) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(color);
+        drawable.setCornerRadius(dip2px(context, 30));
+        drawable.setStroke(strokeWidth, strokeColor);
+        return drawable;
+    }
+    
+    static StateListDrawable getFillBlueBg(Context context) {
+        Drawable pressed = getShape(context, getPrimaryDarkColor(context), 0, getPrimaryDarkColor(context));
+        Drawable normal = getShape(context, getPrimaryColor(context), 0, getPrimaryColor(context));
+        Drawable disable = getShape(context, ContextCompat.getColor(context, R.color.fsEditHint), 0, ContextCompat.getColor(context, R.color.fsEditHint));
+        return createBg(normal, pressed, disable);
+    }
+    
+    static StateListDrawable getFrameBlueBg(Context context) {
+        Drawable pressed = getShape(context, getPrimaryColor(context), 0, getPrimaryColor(context));
+        Drawable normal = getShape(context, ContextCompat.getColor(context, R.color.fsTransparent), dip2px(context, 1), getPrimaryColor(context));
+        return createBg(normal, pressed, null);
+    }
+    
+    private static StateListDrawable createBg(Drawable normal, Drawable pressed, Drawable disable) {
+        StateListDrawable drawable = new StateListDrawable();
+        if (disable != null) {
+            drawable.addState(new int[]{-android.R.attr.state_enabled}, disable);
+        }
+        drawable.addState(new int[]{android.R.attr.state_pressed}, pressed);
+        drawable.addState(new int[]{}, normal);//normal一定要最后
+        return drawable;
+    }
+
+    /**
+     * @param normal  正常时的颜色
+     * @param pressed 按压时的颜色
+     */
+     static ColorStateList createColorStateList(int normal, int pressed) {
+        //normal一定要最后
+        int[][] states = new int[][]{
+                {android.R.attr.state_pressed, android.R.attr.state_enabled},
+                {}
+        };
+        return new ColorStateList(states, new int[]{pressed, normal});
     }
     
     static ArrayList<Storage> getStorages(Context context) {
