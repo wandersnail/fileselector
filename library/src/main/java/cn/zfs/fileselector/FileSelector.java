@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -79,14 +80,21 @@ public class FileSelector {
     /**
      * 开始选择
      */
-    public void select(Activity activity) {
+    public void select(@NonNull Activity activity) {
         activity.startActivityForResult(obtainIntent(activity, SelectFileActivity.class), REQUEST_CODE);
     }
 
     /**
      * 开始选择
      */
-    public void select(Fragment fragment) {
+    public void select(@NonNull Fragment fragment) {
+        fragment.startActivityForResult(obtainIntent(fragment.getActivity(), SelectFileActivity.class), REQUEST_CODE);
+    }
+
+    /**
+     * 开始选择
+     */
+    public void select(@NonNull android.support.v4.app.Fragment fragment) {
         fragment.startActivityForResult(obtainIntent(fragment.getActivity(), SelectFileActivity.class), REQUEST_CODE);
     }
 

@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 8
-        versionName "1.1.7"
+        versionCode 9
+        versionName "1.1.8"
     }
 
     buildTypes {
@@ -41,7 +41,7 @@ publish {
     userOrg = 'fszeng2017' //bintray.com用户名  
     groupId = 'com.github.fszeng2011' //jcenter上的路径  
     artifactId = 'fileselector' //项目名称  
-    publishVersion = '1.1.7' //版本号  
+    publishVersion = '1.1.8' //版本号  
     desc = '文件选择器，支持选择文件夹及多选'
     website = 'https://github.com/fszeng2011'
 }

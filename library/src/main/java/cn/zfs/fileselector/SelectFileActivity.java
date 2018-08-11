@@ -30,7 +30,7 @@ import java.util.List;
  * Created by zeng on 2017/3/1.
  */
 
-public class SelectFileActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+class SelectFileActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     static final String EXTRA_IS_SELECT_FILE = "IS_SELECT_FILE";
     static final String EXTRA_IS_MULTI_SELECT = "IS_MULTI_SELECT";
     static final String EXTRA_IS_LANDSCAPE = "SCREEN_ORIENTATION";
