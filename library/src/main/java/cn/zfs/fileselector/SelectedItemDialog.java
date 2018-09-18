@@ -131,27 +131,35 @@ class SelectedItemDialog extends Dialog implements View.OnClickListener {
             String path = item.file.getAbsolutePath();
             if (item.file.isDirectory()) {
                 holder.tvDesc.setVisibility(View.GONE);
-                holder.iv.setImageResource(R.drawable.fs_folder);
+                ImageLoader.getInstance().loadImage(R.drawable.fs_folder, holder.iv);
             } else {
                 holder.tvDesc.setText(item.file.getParentFile().getAbsolutePath());
                 if (Utils.isApk(path) || Utils.isImage(path) || Utils.isVideo(path)) {
                     ImageLoader.getInstance().loadImage(path, holder.iv);
                 } else if (Utils.isAudio(path)) {
-                    holder.iv.setImageResource(R.drawable.fs_audio);
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_audio, holder.iv);
                 } else if (Utils.isText(path)) {
-                    holder.iv.setImageResource(R.drawable.fs_text);
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_text, holder.iv);
                 } else if (Utils.isPdf(path)) {
-                    holder.iv.setImageResource(R.drawable.fs_pdf);
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_pdf, holder.iv);
                 } else if (Utils.isExcel(path)) {
-                    holder.iv.setImageResource(R.drawable.fs_excel);
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_excel, holder.iv);
                 } else if (Utils.isWord(path)) {
-                    holder.iv.setImageResource(R.drawable.fs_word);
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_word, holder.iv);
                 } else if (Utils.isPPT(path)) {
-                    holder.iv.setImageResource(R.drawable.fs_ppt);
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_ppt, holder.iv);
                 } else if (Utils.isZip(path)) {
-                    holder.iv.setImageResource(R.drawable.fs_zip);
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_zip, holder.iv);
+                } else if (Utils.isFlash(path)) {
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_flash, holder.iv);
+                } else if (Utils.isPs(path)) {
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_ps, holder.iv);
+                } else if (Utils.isHtml(path)) {
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_html, holder.iv);
+                } else if (Utils.isDeveloper(path)) {
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_developer, holder.iv);
                 } else {
-                    holder.iv.setImageResource(R.drawable.fs_file);
+                    ImageLoader.getInstance().loadImage(R.drawable.fs_file, holder.iv);
                 }
             }
             holder.chkBox.setChecked(item.checked);

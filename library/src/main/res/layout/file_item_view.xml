@@ -67,6 +67,7 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
     <View
+        android:alpha="0.5"
         android:layout_alignStart="@id/layoutInfo"
         android:layout_alignEnd="@id/chkBox"
         android:layout_alignParentBottom="true"

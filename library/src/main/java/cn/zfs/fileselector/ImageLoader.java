@@ -180,6 +180,11 @@ class ImageLoader {
             }
         }
 	}
+	
+	void loadImage(int resid, ImageView imageView) {
+	    imageView.setTag(null);
+	    imageView.setImageResource(resid);
+    }
 
 	//根据path在缓存中获取bitmap
 	private Bitmap getBitmapFromLruCache(String key) {
@@ -218,7 +223,8 @@ class ImageLoader {
 		mUIHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				if (imageView.getTag().toString().equals(path)) {
+				Object tag = imageView.getTag();
+			    if (tag != null && tag.toString().equals(path)) {
 					if (bm != null) {
 						imageView.setImageBitmap(bm);
 					} else {

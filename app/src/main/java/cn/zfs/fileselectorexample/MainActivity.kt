@@ -38,7 +38,7 @@ class MainActivity : CheckPermissionsActivity() {
             selector!!.select(this)
         }
         selector!!.setTitle("test")
-        selector!!.setOnFileSelectListener {
+        selector!!.setOnFileSelectListener { it ->
             tvResult.text = ""
             it.forEach {
                 tvResult.append("$it\n")
