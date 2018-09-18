@@ -1,14 +1,14 @@
 package cn.zfs.fileselector;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -30,7 +30,7 @@ import java.util.List;
  * Created by zeng on 2017/3/1.
  */
 
-public class SelectFileActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class SelectFileActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
     static final String EXTRA_IS_SELECT_FILE = "IS_SELECT_FILE";
     static final String EXTRA_IS_MULTI_SELECT = "IS_MULTI_SELECT";
     static final String EXTRA_IS_LANDSCAPE = "SCREEN_ORIENTATION";
@@ -64,6 +64,7 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         //沉浸状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDataFromIntent();
         setContentView(R.layout.activity_select_file);        
         initViews();
@@ -117,10 +118,6 @@ public class SelectFileActivity extends AppCompatActivity implements View.OnClic
     }    
     
     private void initViews() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
         View statusBar = findViewById(R.id.statusBar);
         statusBar.setBackgroundColor(Utils.getPrimaryColor(this));
         findViewById(R.id.layoutTitle).setBackgroundColor(Utils.getPrimaryColor(this));
