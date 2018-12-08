@@ -1,14 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
-apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 27
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
-        versionName "1.1.9"
+        versionName "$lib_version"
     }
 
     buildTypes {
@@ -24,7 +23,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly 'com.android.support:appcompat-v7:27.1.1'
+    compileOnly "com.android.support:appcompat-v7:$support_lib_version"
 }
 
 // 打包源码
@@ -41,7 +40,7 @@ publish {
     userOrg = 'fszeng2017' //bintray.com用户名  
     groupId = 'com.github.fszeng2011' //jcenter上的路径  
     artifactId = 'fileselector' //项目名称  
-    publishVersion = '1.1.9' //版本号  
+    publishVersion = "$lib_version" //版本号  
     desc = '文件选择器，支持选择文件夹及多选'
     website = 'https://github.com/fszeng2011'
 }

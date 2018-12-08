@@ -289,8 +289,8 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
                 pathList.add(selectItemList.get(0).file.getAbsolutePath());
                 intent.putExtra(EXTRA_SELECTED_FILE_PATH_LIST, pathList);
             }
-            setResult(RESULT_OK, intent);
             finish();
+            setResult(RESULT_OK, intent);
         } else if (v.getId() == R.id.tv) {
             DirCell cell = (DirCell) v.getTag();
             //把当前之后的移除
