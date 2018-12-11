@@ -55,7 +55,6 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
     private FileListAdapter adapter;
     private SelectedItemDialog selectedItemDialog;
     private TextView tvOk;
-    private TextView tvCancel;
     private String currentPath;//当前路径
     private List<File> rootFiles = new ArrayList<>();
     private String title;//标题
@@ -143,7 +142,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         tvSelected.setTextColor(Utils.createColorStateList(Utils.getPrimaryColor(this), Color.WHITE));
         tvSelected.setOnClickListener(this);
         tvOk = findViewById(R.id.tvOk);
-        tvCancel = findViewById(R.id.tvCancel);
+        TextView tvCancel = findViewById(R.id.tvCancel);
         tvOk.setBackground(Utils.getFillBlueBg(this));
         tvCancel.setBackground(Utils.getFillGrayBg(this));
         tvOk.setOnClickListener(this);
@@ -293,8 +292,8 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
                 pathList.add(selectItemList.get(0).file.getAbsolutePath());
                 intent.putExtra(EXTRA_SELECTED_FILE_PATH_LIST, pathList);
             }
-            finish();
             setResult(RESULT_OK, intent);
+            finish();
         } else if (v.getId() == R.id.tvCancel) {
             finish();
         } else if (v.getId() == R.id.tv) {
