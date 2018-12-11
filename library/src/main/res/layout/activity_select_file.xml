@@ -96,23 +96,40 @@
         android:layout_height="1px"/>
     <LinearLayout
         android:gravity="center"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:layout_width="match_parent"
         android:layout_height="60dp">
+
+        <TextView
+            android:id="@+id/tvCancel"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textSize="14dp"            
+            android:textColor="@color/fsWhite"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="30dp"/>
+        
         <TextView
             android:id="@+id/tvSelected"
             android:gravity="center"
             android:text="@string/selected_pattern"
             android:textSize="14dp"
-            android:layout_width="120dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1.8"
+            android:layout_width="0dp"
             android:layout_height="30dp"/>
+        
         <TextView
             android:id="@+id/tvOk"
             android:gravity="center"
             android:text="@string/ok"
             android:textSize="14dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="20dp"
             android:textColor="@color/fsWhite"
-            android:layout_width="120dp"
-            android:layout_height="30dp"/>
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="30dp"/>        
     </LinearLayout>
 </LinearLayout>

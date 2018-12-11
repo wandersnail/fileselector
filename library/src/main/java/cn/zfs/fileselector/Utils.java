@@ -224,13 +224,20 @@ class Utils {
         return createBg(normal, pressed, disable);
     }
     
+    static StateListDrawable getFillGrayBg(Context context) {
+        Drawable pressed = getShape(context, ContextCompat.getColor(context, R.color.fsEditHintDark), 0, ContextCompat.getColor(context, R.color.fsEditHintDark));
+        Drawable normal = getShape(context, ContextCompat.getColor(context, R.color.fsEditHint), 0, ContextCompat.getColor(context, R.color.fsEditHint));
+        Drawable disable = getShape(context, ContextCompat.getColor(context, R.color.fsEditHint), 0, ContextCompat.getColor(context, R.color.fsEditHint));
+        return createBg(normal, pressed, disable);
+    }
+    
     static StateListDrawable getFrameBlueBg(Context context) {
         Drawable pressed = getShape(context, getPrimaryColor(context), 0, getPrimaryColor(context));
         Drawable normal = getShape(context, ContextCompat.getColor(context, R.color.fsTransparent), dip2px(context, 1), getPrimaryColor(context));
         return createBg(normal, pressed, null);
     }
     
-    private static StateListDrawable createBg(Drawable normal, Drawable pressed, Drawable disable) {
+    static StateListDrawable createBg(Drawable normal, Drawable pressed, Drawable disable) {
         StateListDrawable drawable = new StateListDrawable();
         if (disable != null) {
             drawable.addState(new int[]{-android.R.attr.state_enabled}, disable);

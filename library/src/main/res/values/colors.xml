@@ -9,5 +9,6 @@
     <color name="fsDivider">#C6C6C6</color>
     <color name="fsSubText">#989898</color>
     <color name="fsEditHint">#CCCCCC</color>
+    <color name="fsEditHintDark">#b0b0b0</color>
     <color name="fsBtnPressed">#11000000</color>
 </resources>

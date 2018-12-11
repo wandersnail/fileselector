@@ -83,26 +83,26 @@ public class FileSelector {
      * 开始选择
      */
     public void select(@NonNull Activity activity) {
-        activity.startActivityForResult(obtainIntent(activity, SelectFileActivity.class), REQUEST_CODE);
+        activity.startActivityForResult(obtainIntent(activity), REQUEST_CODE);
     }
 
     /**
      * 开始选择
      */
     public void select(@NonNull Fragment fragment) {
-        fragment.startActivityForResult(obtainIntent(fragment.getActivity(), SelectFileActivity.class), REQUEST_CODE);
+        fragment.startActivityForResult(obtainIntent(fragment.getActivity()), REQUEST_CODE);
     }
 
     /**
      * 开始选择
      */
     public void select(@NonNull android.support.v4.app.Fragment fragment) {
-        fragment.startActivityForResult(obtainIntent(fragment.getActivity(), SelectFileActivity.class), REQUEST_CODE);
+        fragment.startActivityForResult(obtainIntent(fragment.getActivity()), REQUEST_CODE);
     }
 
-    private Intent obtainIntent(Context context, Class<?> cls) {
+    private Intent obtainIntent(Context context) {
         SelectFileActivity.filenameFilter = filenameFilter;
-        Intent intent = new Intent(context, cls);
+        Intent intent = new Intent(context, SelectFileActivity.class);
         intent.putExtra(SelectFileActivity.EXTRA_IS_LANDSCAPE, isLandscape);
         intent.putExtra(SelectFileActivity.EXTRA_IS_SELECT_FILE, isSelectFile);
         intent.putExtra(SelectFileActivity.EXTRA_IS_MULTI_SELECT, isMultiSelect);
