@@ -1,8 +1,23 @@
 # 使用方法
-	
-	dependencies {
-		implementation 'com.github.fszeng2011:fileselector:1.1.8'
+
+1. 在project的build.gradle里的repositories添加内容，最好两个都加上，有时jitpack会抽风，同步不下来。
+```
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+		maven { url 'https://dl.bintray.com/wandersnail/android/' }
 	}
+}
+```
+2. module的build.gradle中的添加依赖：
+```
+dependencies {
+	...
+	implementation 'com.github.wandersnail:fileselector:1.0.0'}
+}
+```
+	
 
     class MainActivity : CheckPermissionsActivity() {
 	    private var selector: FileSelector? = null
@@ -53,12 +68,11 @@
 	}
 	
 ## 代码托管
-[![](https://jitpack.io/v/fszeng2011/fileselector.svg)](https://jitpack.io/#fszeng2011/fileselector)
-[![Download](https://api.bintray.com/packages/fszeng2017/maven/fileselector/images/download.svg) ](https://bintray.com/fszeng2017/maven/fileselector/_latestVersion)
-[![JCenter](https://img.shields.io/badge/JCenter-1.1.5-green.svg?style=flat)](http://jcenter.bintray.com/com/github/fszeng2011/fileselector/1.1.5/)
+[![](https://jitpack.io/v/wandersnail/fileselector.svg)](https://jitpack.io/#wandersnail/fileselector)
+[![Download](https://api.bintray.com/packages/wandersnail/android/fileselector/images/download.svg) ](https://bintray.com/wandersnail/android/fileselector/_latestVersion)
 
 ## 示例效果
-![image](https://github.com/fszeng2011/fileselector/blob/master/screenshot/device-2018-05-27-165915.png)
-![image](https://github.com/fszeng2011/fileselector/blob/master/screenshot/device-2018-05-27-170008.png)
-![image](https://github.com/fszeng2011/fileselector/blob/master/screenshot/device-2018-05-27-170035.png)
-![image](https://github.com/fszeng2011/fileselector/blob/master/screenshot/device-2018-05-27-162627.png)
+![image](https://github.com/wandersnail/fileselector/blob/master/screenshot/device-2018-05-27-165915.png)
+![image](https://github.com/wandersnail/fileselector/blob/master/screenshot/device-2018-05-27-170008.png)
+![image](https://github.com/wandersnail/fileselector/blob/master/screenshot/device-2018-05-27-170035.png)
+![image](https://github.com/wandersnail/fileselector/blob/master/screenshot/device-2018-05-27-162627.png)

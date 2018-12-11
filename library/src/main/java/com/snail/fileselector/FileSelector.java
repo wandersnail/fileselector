@@ -1,12 +1,14 @@
-package cn.zfs.fileselector;
+package com.snail.fileselector;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -20,13 +22,13 @@ public class FileSelector {
     private static final int REQUEST_CODE = 21516;
     private OnFileSelectListener listener;
     private boolean isLandscape;
-    private File root;
+    private File root = Environment.getExternalStorageDirectory();
     private boolean isSelectFile;
     private boolean isMultiSelect;
     private FilenameFilter filenameFilter;
     private String title;
     
-    public FileSelector setRoot(File root) {
+    public FileSelector setRoot(@Nullable File root) {
         this.root = root;
         return this;
     }

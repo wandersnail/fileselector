@@ -1,4 +1,4 @@
-package cn.zfs.fileselector;
+package com.snail.fileselector;
 
 /**
  * Java汉字转换为拼音

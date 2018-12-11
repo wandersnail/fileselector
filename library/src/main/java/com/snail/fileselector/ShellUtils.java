@@ -1,4 +1,4 @@
-package cn.zfs.fileselector;
+package com.snail.fileselector;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

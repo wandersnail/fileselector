@@ -2,7 +2,7 @@ package cn.zfs.fileselectorexample
 
 import android.content.Intent
 import android.os.Bundle
-import cn.zfs.fileselector.FileSelector
+import com.snail.fileselector.FileSelector
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : CheckPermissionsActivity() {
