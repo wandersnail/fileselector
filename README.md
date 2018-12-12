@@ -1,6 +1,18 @@
+## 代码托管
+[![](https://jitpack.io/v/wandersnail/fileselector.svg)](https://jitpack.io/#wandersnail/fileselector)
+[![Download](https://api.bintray.com/packages/wandersnail/android/fileselector/images/download.svg) ](https://bintray.com/wandersnail/android/fileselector/_latestVersion)
+
 # 使用方法
 
-1. 在project的build.gradle里的repositories添加内容，最好两个都加上，有时jitpack会抽风，同步不下来。
+1. module的build.gradle中的添加依赖，自行修改为最新版本，同步后通常就可以用了：
+```
+dependencies {
+	...
+	implementation 'com.github.wandersnail:fileselector:1.0.0'
+}
+```
+
+2. 如果从jcenter下载失败。在project的build.gradle里的repositories添加内容，最好两个都加上，有时jitpack会抽风，同步不下来。添加完再次同步即可。
 ```
 allprojects {
 	repositories {
@@ -8,13 +20,6 @@ allprojects {
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://dl.bintray.com/wandersnail/android/' }
 	}
-}
-```
-2. module的build.gradle中的添加依赖：
-```
-dependencies {
-	...
-	implementation 'com.github.wandersnail:fileselector:1.0.0'
 }
 ```
 	
@@ -66,10 +71,6 @@ dependencies {
 	        selector?.onActivityResult(requestCode, resultCode, data)
 	    }
 	}
-	
-## 代码托管
-[![](https://jitpack.io/v/wandersnail/fileselector.svg)](https://jitpack.io/#wandersnail/fileselector)
-[![Download](https://api.bintray.com/packages/wandersnail/android/fileselector/images/download.svg) ](https://bintray.com/wandersnail/android/fileselector/_latestVersion)
 
 ## 示例效果
 ![image](https://github.com/wandersnail/fileselector/blob/master/screenshot/device-2018-05-27-165915.png)
