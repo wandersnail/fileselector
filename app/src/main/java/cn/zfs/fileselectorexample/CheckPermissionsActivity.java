@@ -33,8 +33,7 @@ public class CheckPermissionsActivity extends AppCompatActivity {
     //需要进行检测的权限
 	private List<String> getNeedPermissions() {
         List<String> list = new ArrayList<>();
-        list.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-//        list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 //        list.add(Manifest.permission.ACCESS_NETWORK_STATE);
 //        list.add(Manifest.permission.READ_PHONE_STATE);
 //        list.add(Manifest.permission.WRITE_SETTINGS);
@@ -69,8 +68,7 @@ public class CheckPermissionsActivity extends AppCompatActivity {
 	    }
 		List<String> needRequestPermissonList = findDeniedPermissions(permissions);
 		if (needRequestPermissonList.size() > 0) {
-			ActivityCompat.requestPermissions(this, needRequestPermissonList.toArray(
-							new String[needRequestPermissonList.size()]), PERMISSON_REQUESTCODE);
+			ActivityCompat.requestPermissions(this, needRequestPermissonList.toArray(new String[0]), PERMISSON_REQUESTCODE);
 		} else {
             isNeedCheck = false;
             onPermissionsRequestResult(true);
@@ -168,7 +166,7 @@ public class CheckPermissionsActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(msg)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.fs_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();

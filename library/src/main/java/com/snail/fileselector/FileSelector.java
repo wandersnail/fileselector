@@ -1,14 +1,15 @@
 package com.snail.fileselector;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -27,12 +28,21 @@ public class FileSelector {
     private boolean isMultiSelect;
     private FilenameFilter filenameFilter;
     private String title;
+    private int[] themeColors;
     
     public FileSelector setRoot(@Nullable File root) {
         this.root = root;
         return this;
     }
 
+    /**
+     * 设置主题颜色
+     */
+    public FileSelector setThemeColor(@ColorInt int colorPrimary, @ColorInt int colorPrimaryDark) {
+        themeColors = new int[]{colorPrimary, colorPrimaryDark};
+        return this;
+    }
+    
     /**
      * 设置屏幕方向
      */
@@ -95,13 +105,6 @@ public class FileSelector {
         fragment.startActivityForResult(obtainIntent(fragment.getActivity()), REQUEST_CODE);
     }
 
-    /**
-     * 开始选择
-     */
-    public void select(@NonNull android.support.v4.app.Fragment fragment) {
-        fragment.startActivityForResult(obtainIntent(fragment.getActivity()), REQUEST_CODE);
-    }
-
     private Intent obtainIntent(Context context) {
         SelectFileActivity.filenameFilter = filenameFilter;
         Intent intent = new Intent(context, SelectFileActivity.class);
@@ -113,6 +116,9 @@ public class FileSelector {
         }
         if (root != null) {
             intent.putExtra(SelectFileActivity.EXTRA_ROOT, root);
+        }
+        if (themeColors != null) {
+            intent.putExtra(SelectFileActivity.EXTRA_THEME_COLORS, themeColors);
         }
         return intent;
     }

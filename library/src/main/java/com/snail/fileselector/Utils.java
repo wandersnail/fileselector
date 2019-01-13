@@ -46,7 +46,21 @@ class Utils {
     private static final String[] psSuffixs = {".psd", ".pdd", ".eps", ".psb"};
     private static final String[] htmlSuffixs = {".htm", ".html", ".mht", ".mhtml"};
     private static final String[] developerSuffixs = {".db", ".db-journal", ".db3", ".sqlite", ".xml", ".wdb", ".mdf", ".dbf", ".properties", ".cfg", ".ini", ".sys"};
-	
+
+    /**
+     * 获取显示屏幕宽度，不包含状态栏和导航栏
+     */
+    static int getDisplayScreenWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    /**
+     * 获取显示屏幕高度
+     */
+    static int getDisplayScreenHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
+    
     /**
      * 根据视频生成缩略图
      * @param path 视频的路径
@@ -177,7 +191,7 @@ class Utils {
         return 0;
     }
     
-    static int getPrimaryColor(Context context) {
+    static int getPrimaryColor(Context context, int defaultColor) {
         TypedValue typedValue = new TypedValue();
         boolean found = false;
         try {
@@ -186,10 +200,10 @@ class Utils {
                 found = context.getTheme().resolveAttribute(resId, typedValue, true);
             }
         } catch (Exception ignored) {}
-        return found ? typedValue.data : ContextCompat.getColor(context, R.color.fsColorPrimary);
+        return found ? typedValue.data : defaultColor;
     }
 
-    static int getPrimaryDarkColor(Context context) {
+    static int getPrimaryDarkColor(Context context, int defaultColor) {
         TypedValue typedValue = new TypedValue();
         boolean found = false;
         try {
@@ -198,13 +212,13 @@ class Utils {
                 found = context.getTheme().resolveAttribute(resId, typedValue, true);
             }
         } catch (Exception ignored) {}
-        return found ? typedValue.data : ContextCompat.getColor(context, R.color.fsColorPrimaryDark);
+        return found ? typedValue.data : defaultColor;
     }
 
     /**
-     * 根据手机的分辨率从 dip 的单位 转成为 px(像素)
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
-    static int dip2px(Context context, float dpValue) {
+    static int dp2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
@@ -212,14 +226,14 @@ class Utils {
     static Drawable getShape(Context context, int color, int strokeWidth, int strokeColor) {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(color);
-        drawable.setCornerRadius(dip2px(context, 30));
+        drawable.setCornerRadius(dp2px(context, 30));
         drawable.setStroke(strokeWidth, strokeColor);
         return drawable;
     }
     
-    static StateListDrawable getFillBlueBg(Context context) {
-        Drawable pressed = getShape(context, getPrimaryDarkColor(context), 0, getPrimaryDarkColor(context));
-        Drawable normal = getShape(context, getPrimaryColor(context), 0, getPrimaryColor(context));
+    static StateListDrawable getFillBlueBg(Context context, int[] colors) {
+        Drawable pressed = getShape(context, colors[1], 0, colors[1]);
+        Drawable normal = getShape(context, colors[0], 0, colors[0]);
         Drawable disable = getShape(context, ContextCompat.getColor(context, R.color.fsEditHint), 0, ContextCompat.getColor(context, R.color.fsEditHint));
         return createBg(normal, pressed, disable);
     }
@@ -231,9 +245,9 @@ class Utils {
         return createBg(normal, pressed, disable);
     }
     
-    static StateListDrawable getFrameBlueBg(Context context) {
-        Drawable pressed = getShape(context, getPrimaryColor(context), 0, getPrimaryColor(context));
-        Drawable normal = getShape(context, ContextCompat.getColor(context, R.color.fsTransparent), dip2px(context, 1), getPrimaryColor(context));
+    static StateListDrawable getFrameBlueBg(Context context, int color) {
+        Drawable pressed = getShape(context, color, 0, color);
+        Drawable normal = getShape(context, ContextCompat.getColor(context, R.color.fsTransparent), dp2px(context, 1), color);
         return createBg(normal, pressed, null);
     }
     

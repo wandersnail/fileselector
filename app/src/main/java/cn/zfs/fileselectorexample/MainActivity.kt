@@ -1,5 +1,6 @@
 package cn.zfs.fileselectorexample
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.snail.fileselector.FileSelector
@@ -10,13 +11,15 @@ class MainActivity : CheckPermissionsActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.AppThemeGreen)
         setContentView(R.layout.activity_main)
         selector = FileSelector().setScreenOrientation(false)
+                .setThemeColor(getColorByAttrId(this, R.attr.colorPrimary), getColorByAttrId(this, R.attr.colorPrimaryDark))
                 .setFilenameFilter { _, name ->
                     name != null && !name.startsWith(".")
                 }
         //设置根目录，如果不设置，默认列出所有存储路径作为根目录
-//        selector!!.setRoot(Environment.getExternalStorageDirectory())
+        selector!!.setRoot(null)
         btnSelectMultiFile.setOnClickListener {
             selector!!.setMultiSelect(true)
             selector!!.setSelectFile(true)
@@ -44,6 +47,13 @@ class MainActivity : CheckPermissionsActivity() {
                 tvResult.append("$it\n")
             }
         }
+    }
+
+    fun getColorByAttrId(context: Context, attr: Int): Int {
+        val typedArray = context.obtainStyledAttributes(intArrayOf(attr))
+        val color = typedArray.getColor(0, -0x1000000)
+        typedArray.recycle()
+        return color
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

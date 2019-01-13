@@ -1,23 +1,35 @@
 package com.snail.fileselector;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -31,12 +43,15 @@ import java.util.List;
  */
 
 public class SelectFileActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
+    private static final int PERMISSON_REQUESTCODE = 10;
+    
     static final String EXTRA_IS_SELECT_FILE = "IS_SELECT_FILE";
     static final String EXTRA_IS_MULTI_SELECT = "IS_MULTI_SELECT";
     static final String EXTRA_IS_LANDSCAPE = "SCREEN_ORIENTATION";
     static final String EXTRA_ROOT = "ROOT";
     static final String EXTRA_SELECTED_FILE_PATH_LIST = "SELECTED_FILE_LIST";
     static final String EXTRA_TITLE = "TITLE";
+    static final String EXTRA_THEME_COLORS = "THEME_COLORS";
 
     private ListView lv;
     private TextView tvSelected;
@@ -58,6 +73,11 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
     private String currentPath;//当前路径
     private List<File> rootFiles = new ArrayList<>();
     private String title;//标题
+    private int[] themeColors;
+    private View layoutTitle;
+    private PopupWindow popupWindow;
+    private View maskView;
+    private View ivMore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,10 +86,37 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDataFromIntent();
-        setContentView(R.layout.activity_select_file);        
-        initViews();
+        setContentView(R.layout.fs_activity_select_file);
+        //先检查写权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSON_REQUESTCODE);
+        } else {
+            initViews();
+        }
     }
 
+    //检测是否所有的权限都已经授权
+    private boolean verifyPermissions(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] paramArrayOfInt) {
+        if (requestCode == PERMISSON_REQUESTCODE) {
+            if (verifyPermissions(paramArrayOfInt)) {
+                initViews();
+            } else {
+                finish();
+            }
+        }
+    }
+    
     @Override
     protected void onDestroy() {
         filenameFilter = null;
@@ -80,7 +127,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
     public void onBackPressed() {
         if (!posList.isEmpty()) {
             View child = dirContainer.getChildAt(dirContainer.getChildCount() - 1);
-            TextView tv = child.findViewById(R.id.tv);
+            TextView tv = child.findViewById(R.id.fstv);
             DirCell cell = (DirCell) tv.getTag();
             dirContainer.removeView(child);
             if (rootFiles.isEmpty()) {
@@ -107,43 +154,51 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         }
     }
 
+    public int[] getThemeColors() {
+        return themeColors;
+    }
+    
     private void addDir(File file) {
-        View view = getLayoutInflater().inflate(R.layout.dir_view, null);        
-        TextView tv = view.findViewById(R.id.tv);
+        View view = getLayoutInflater().inflate(R.layout.fs_dir_view, null);
+        TextView tv = view.findViewById(R.id.fstv);
         int childCount = dirContainer.getChildCount();
         tv.setTag(new DirCell(childCount, file));
         tv.setText(file.getName());
         tv.setOnClickListener(this);
         dirContainer.addView(view);
-    }    
-    
+    }
+
     private void initViews() {
-        View statusBar = findViewById(R.id.statusBar);
-        statusBar.setBackgroundColor(Utils.getPrimaryColor(this));
-        findViewById(R.id.layoutTitle).setBackgroundColor(Utils.getPrimaryColor(this));
+        View statusBar = findViewById(R.id.fsstatusBar);
+        statusBar.setBackgroundColor(themeColors[0]);
+        maskView = findViewById(R.id.fsMaskView);
+        layoutTitle = findViewById(R.id.fslayoutTitle);
+        layoutTitle.setBackgroundColor(themeColors[0]);
         ViewGroup.LayoutParams params = statusBar.getLayoutParams();
         params.height = Utils.getStatusBarHeight(this);
         statusBar.setLayoutParams(params);
-        dirContainer = findViewById(R.id.dirContainer);
-        TextView tvTitle = findViewById(R.id.tvTitle);
-        tvAll = findViewById(R.id.tvAll);
-        findViewById(R.id.ivBack).setOnClickListener(this);
+        dirContainer = findViewById(R.id.fsdirContainer);
+        TextView tvTitle = findViewById(R.id.fstvTitle);
+        tvAll = findViewById(R.id.fstvAll);
+        findViewById(R.id.fsivBack).setOnClickListener(this);
+        ivMore = findViewById(R.id.fsivMore);
+        ivMore.setOnClickListener(this);
         tvAll.setOnClickListener(this);
-        scrollView = findViewById(R.id.scrollView);
-        TextView tvRoot = findViewById(R.id.tvRoot);
-        lv = findViewById(R.id.lv);
+        scrollView = findViewById(R.id.fsscrollView);
+        TextView tvRoot = findViewById(R.id.fstvRoot);
+        lv = findViewById(R.id.fslv);
         if (title == null) {
-            tvTitle.setText(R.string.all_files);
+            tvTitle.setText(R.string.fs_all_files);
         } else {
             tvTitle.setText(title);
         }
-        tvSelected = findViewById(R.id.tvSelected);
-        tvSelected.setBackground(Utils.getFrameBlueBg(this));
-        tvSelected.setTextColor(Utils.createColorStateList(Utils.getPrimaryColor(this), Color.WHITE));
+        tvSelected = findViewById(R.id.fstvSelected);
+        tvSelected.setBackground(Utils.getFrameBlueBg(this, themeColors[0]));
+        tvSelected.setTextColor(Utils.createColorStateList(themeColors[0], Color.WHITE));
         tvSelected.setOnClickListener(this);
-        tvOk = findViewById(R.id.tvOk);
-        TextView tvCancel = findViewById(R.id.tvCancel);
-        tvOk.setBackground(Utils.getFillBlueBg(this));
+        tvOk = findViewById(R.id.fstvOk);
+        TextView tvCancel = findViewById(R.id.fstvCancel);
+        tvOk.setBackground(Utils.getFillBlueBg(this, themeColors));
         tvCancel.setBackground(Utils.getFillGrayBg(this));
         tvOk.setOnClickListener(this);
         tvCancel.setOnClickListener(this);
@@ -152,7 +207,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         selectedItemDialog = new SelectedItemDialog(this);
         adapter = new FileListAdapter();
         lv.setAdapter(adapter);
-        lv.setOnItemClickListener(this);     
+        lv.setOnItemClickListener(this);
         tvRoot.setOnClickListener(this);
         loadFiles(rootFile);
     }
@@ -166,14 +221,21 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         rootFile = (File) getIntent().getSerializableExtra(EXTRA_ROOT);
-		if (rootFile == null) {
-			if (ShellUtils.hasRootPermission()) {
-				rootFile = new File("/");
-			}
-		}
-		title = getIntent().getStringExtra(EXTRA_TITLE);
+        if (rootFile == null) {
+            if (ShellUtils.hasRootPermission()) {
+                rootFile = new File("/");
+            }
+        }
+        title = getIntent().getStringExtra(EXTRA_TITLE);
+        int[] themeColors = getIntent().getIntArrayExtra(EXTRA_THEME_COLORS);
+        if (themeColors == null) {
+            this.themeColors = new int[] {Utils.getPrimaryColor(this, ContextCompat.getColor(this, R.color.fsColorPrimary)),
+                    Utils.getPrimaryColor(this, ContextCompat.getColor(this, R.color.fsColorPrimaryDark))};
+        } else {
+            this.themeColors = themeColors;
+        }
     }
-    
+
     private void loadFiles(File dir) {
         currentPath = dir == null ? null : dir.getAbsolutePath();
         itemList.clear();
@@ -216,9 +278,21 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         Collections.sort(fList, comparator);
         itemList.addAll(dirList);
         itemList.addAll(fList);
-        
+
+        RelativeLayout.LayoutParams tvAllLp = (RelativeLayout.LayoutParams) tvAll.getLayoutParams();
+        if (dir == null) {
+            ivMore.setVisibility(View.GONE);
+            tvAllLp.addRule(RelativeLayout.ALIGN_PARENT_END);
+        } else {
+            ivMore.setVisibility(View.VISIBLE);
+            tvAllLp.removeRule(RelativeLayout.ALIGN_PARENT_END);
+        }
+        tvAll.setLayoutParams(tvAllLp);
         //只有多选，并且当选择文件时，文件列表不为空，当选择文件夹时，文件夹列表不为空
         tvAll.setVisibility(isMultiSelect && ((isSlectFile && !fList.isEmpty()) || (!isSlectFile && !dirList.isEmpty())) ? View.VISIBLE : View.INVISIBLE);
+        if (tvAll.getVisibility() == View.VISIBLE && selectItemList.containsAll(itemList)) {
+            switchSelectAllState(true);
+        }
         adapter.notifyDataSetChanged();
         scrollView.post(new Runnable() {
             @Override
@@ -228,19 +302,19 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         });
     }
 
-	private Comparator<Item> comparator = new Comparator<Item>() {
-		@Override
-		public int compare(Item o1, Item o2) {
-			if (o1 == null) {
-				return -1;
-			}
-			if (o2 == null) {
-				return 1;
-			}
-			return o1.file.getName().compareToIgnoreCase(o2.file.getName());
-		}
-	};
-    
+    private Comparator<Item> comparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            if (o1 == null) {
+                return -1;
+            }
+            if (o2 == null) {
+                return 1;
+            }
+            return o1.file.getName().compareToIgnoreCase(o2.file.getName());
+        }
+    };
+
     //是否已被选
     private boolean isSelectedItem(File file) {
         for (Item item : selectItemList) {
@@ -258,29 +332,29 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             //只全选指定类型
             if ((item.file.isDirectory() && !isSlectFile) || (item.file.isFile() && isSlectFile) || (currentPath == null && !isSlectFile)) {
                 item.checked = enable;
-                updateSelectedFileList(item);
+                updateSelectedFileList(item, false);
             }
         }
-        adapter.notifyDataSetChanged();
+        updateViews();
     }
 
     //清除全选状态，更新标题栏按钮文本
     private void switchSelectAllState(boolean selectAll) {
         isSelectedAll = selectAll;
         tvAll.setVisibility(isMultiSelect ? View.VISIBLE : View.INVISIBLE);
-        tvAll.setText(isSelectedAll ? R.string.all_not_select : R.string.select_all);
+        tvAll.setText(isSelectedAll ? R.string.fs_all_not_select : R.string.fs_select_all);
     }
 
     private void updateSelectedText() {
-        tvSelected.setText(String.format(getString(R.string.selected_pattern), selectItemList.size()));
+        tvSelected.setText(String.format(getString(R.string.fs_selected_pattern), selectItemList.size()));
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.tvSelected) {
+        if (v.getId() == R.id.fstvSelected) {
             selectedItemDialog.updateList(selectItemList);
             selectedItemDialog.show();
-        } else if (v.getId() == R.id.tvOk) {            
+        } else if (v.getId() == R.id.fstvOk) {
             Intent intent = new Intent();
             ArrayList<String> pathList = new ArrayList<>();
             if (isMultiSelect) {
@@ -294,9 +368,9 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             }
             setResult(RESULT_OK, intent);
             finish();
-        } else if (v.getId() == R.id.tvCancel) {
+        } else if (v.getId() == R.id.fstvCancel) {
             finish();
-        } else if (v.getId() == R.id.tv) {
+        } else if (v.getId() == R.id.fstv) {
             DirCell cell = (DirCell) v.getTag();
             //把当前之后的移除
             int childCount = dirContainer.getChildCount();
@@ -307,7 +381,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             int[] ints = new int[2];
             for (int i = posList.size() - 1; i >= 0; i--) {
                 if (cell.index < i) {
-                    ints = posList.remove(i);                    
+                    ints = posList.remove(i);
                 } else {
                     break;
                 }
@@ -315,7 +389,7 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             //更新列表
             loadFiles(cell.location);
             lv.setSelectionFromTop(ints[0], ints[1]);
-        } else if (v.getId() == R.id.tvRoot) {
+        } else if (v.getId() == R.id.fstvRoot) {
             if (rootFile != null) {
                 if (dirContainer.getChildCount() > 0) {
                     loadFiles(rootFile);
@@ -329,13 +403,15 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
                 posList.clear();
                 dirContainer.removeAllViews();
             }
-        } else if (v.getId() == R.id.tvAll) {
+        } else if (v.getId() == R.id.fstvAll) {
             switchSelectAll(!isSelectedAll);
-        } else if (v.getId() == R.id.ivBack) {
+        } else if (v.getId() == R.id.fsivBack) {
             onBackPressed();
+        } else if (v.getId() == R.id.fsivMore) {
+            showPopupWindow();
         }
-    }    
-    
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Item item = itemList.get(position);
@@ -350,8 +426,8 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             lv.setSelectionFromTop(0, 0);
         } else if (isSlectFile) {
             item.checked = !item.checked;
-            ((CheckBox) view.findViewById(R.id.chkBox)).setChecked(item.checked);
-            updateSelectedFileList(item);
+            view.findViewById(R.id.fsivSelect).setSelected(item.checked);
+            updateSelectedFileList(item, true);
         }
     }
 
@@ -381,23 +457,23 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = View.inflate(SelectFileActivity.this, R.layout.file_item_view, null);
+                convertView = View.inflate(SelectFileActivity.this, R.layout.fs_file_item_view, null);
                 holder = new ViewHolder();
                 convertView.setTag(holder);
-                holder.tvName = convertView.findViewById(R.id.tvName);
-                holder.tvDesc = convertView.findViewById(R.id.tvDesc);
+                holder.tvName = convertView.findViewById(R.id.fstvName);
+                holder.tvDesc = convertView.findViewById(R.id.fstvDesc);
                 holder.iv = convertView.findViewById(R.id.iv);
-                holder.chkBox = convertView.findViewById(R.id.chkBox);
-                convertView.findViewById(R.id.ivDel).setVisibility(View.INVISIBLE);
-                holder.chkView = convertView.findViewById(R.id.chkView);
+                holder.ivSelect = convertView.findViewById(R.id.fsivSelect);
+                convertView.findViewById(R.id.fsivDel).setVisibility(View.INVISIBLE);
+                holder.chkView = convertView.findViewById(R.id.fschkView);
                 holder.chkView.setTag(holder);
                 holder.chkView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ViewHolder h = (ViewHolder) v.getTag();
                         Item item = getItem(h.position);
-                        item.checked = !h.chkBox.isChecked();
-                        updateSelectedFileList(item);
+                        item.checked = !item.checked;
+                        updateSelectedFileList(item, true);
                     }
                 });
             } else {
@@ -414,13 +490,13 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
             if (item.file.isDirectory() || currentPath == null) {
                 //选择文件时，不可点击，不显示选框
                 holder.chkView.setClickable(!isSlectFile);
-                holder.chkBox.setVisibility(isSlectFile ? View.INVISIBLE : View.VISIBLE);
-				File[] files;
-				if (filenameFilter != null) {
-					files = item.file.listFiles(filenameFilter);
-				} else {
-					files = item.file.listFiles();
-				}
+                holder.ivSelect.setVisibility(isSlectFile ? View.INVISIBLE : View.VISIBLE);
+                File[] files;
+                if (filenameFilter != null) {
+                    files = item.file.listFiles(filenameFilter);
+                } else {
+                    files = item.file.listFiles();
+                }
                 int num = 0;
                 //如果是选择文件夹，文件不计数
                 if (files != null) {
@@ -429,16 +505,16 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
                     } else {
                         for (File f : files) {
                             if (f.isDirectory()) {
-                                num++;                                
+                                num++;
                             }
                         }
                     }
                 }
-                holder.tvDesc.setText(String.format(getString(num > 1 ? R.string.multi_item_pattern : R.string.single_item_pattern), num));
+                holder.tvDesc.setText(String.format(getString(num > 1 ? R.string.fs_multi_item_pattern : R.string.fs_single_item_pattern), num));
                 ImageLoader.getInstance().loadImage(R.drawable.fs_folder, holder.iv);
             } else {
                 holder.chkView.setClickable(false);
-                holder.chkBox.setVisibility(isSlectFile ? View.VISIBLE : View.INVISIBLE);
+                holder.ivSelect.setVisibility(isSlectFile ? View.VISIBLE : View.INVISIBLE);
                 holder.tvDesc.setText(Utils.formatFileSize(item.file.length()));
                 if (Utils.isApk(path) || Utils.isImage(path) || Utils.isVideo(path)) {
                     ImageLoader.getInstance().loadImage(path, holder.iv);
@@ -468,7 +544,12 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
                     ImageLoader.getInstance().loadImage(R.drawable.fs_file, holder.iv);
                 }
             }
-            holder.chkBox.setChecked(item.checked);
+            holder.ivSelect.setSelected(item.checked);
+            if (item.checked) {
+                holder.ivSelect.setColorFilter(themeColors[0]);
+            } else {
+                holder.ivSelect.setColorFilter(Color.LTGRAY);
+            }
             return convertView;
         }
     }
@@ -484,12 +565,12 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
 
     private void updateViews() {
         tvOk.setEnabled(!selectItemList.isEmpty());
-        adapter.notifyDataSetChanged();
         updateSelectedText();
+        adapter.notifyDataSetChanged();
         selectedItemDialog.updateList(selectItemList);
     }
 
-    public void updateSelectedFileList(Item item) {
+    public void updateSelectedFileList(Item item, boolean needNotify) {
         if (item.checked) {
             if (!selectItemList.contains(item)) {
                 //如果是单选，把已选的删除
@@ -507,17 +588,101 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         } else {
             selectItemList.remove(item);
         }
-        updateViews();
-        boolean b = true;
-        for (Item i : itemList) {
-            if (((isSlectFile && i.file.isFile()) || (!isSlectFile && i.file.isDirectory())) && !selectItemList.contains(i)) {
-                b = false;
+        if (needNotify) {
+            updateViews();
+            boolean b = true;
+            for (Item i : itemList) {
+                if (((isSlectFile && i.file.isFile()) || (!isSlectFile && i.file.isDirectory())) && !selectItemList.contains(i)) {
+                    b = false;
+                }
             }
+            if (b) {
+                switchSelectAllState(true);
+            } else {
+                switchSelectAllState(false);
+            }
+        }        
+    }
+    
+    private void showPopupWindow() {
+        if (popupWindow == null) {
+            ListView lv = (ListView) View.inflate(this, R.layout.fs_listview, null);
+            List<String> items = new ArrayList<>();
+            items.add(getString(R.string.fs_new_folder));
+            lv.setAdapter(new PopupMenuAdapter(this, items));
+            popupWindow = new PopupWindow(lv, Utils.getDisplayScreenWidth(this), Utils.dp2px(this, 50));
+            popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.fs_popun_menu_bg));
+            popupWindow.setFocusable(true);
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    //pop消失，去掉蒙层
+                    maskView.setVisibility(View.GONE);
+                }
+            });
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    popupWindow.dismiss();
+                    //显示设置文件夹名称对话框
+                    final FrameLayout layout = new FrameLayout(SelectFileActivity.this);
+                    final EditText et = new EditText(SelectFileActivity.this);
+                    int padding = Utils.dp2px(SelectFileActivity.this, 8);
+                    layout.setPadding(padding, 0, padding, 0);
+                    layout.addView(et);
+                    new AlertDialog.Builder(SelectFileActivity.this)
+                            .setTitle(R.string.fs_new_folder)
+                            .setView(layout)
+                            .setNegativeButton(R.string.fs_cancel, null)
+                            .setPositiveButton(R.string.fs_ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (et.getText() != null && !et.getText().toString().trim().isEmpty()) {
+                                        String dirName = et.getText().toString().trim();
+                                        File file = new File(currentPath, dirName);
+                                        //不存在才新建
+                                        if (!file.exists()) {
+                                            if (file.mkdir()) {
+                                                Toast.makeText(SelectFileActivity.this, R.string.fs_folder_create_success, Toast.LENGTH_SHORT).show();
+                                                loadFiles(new File(currentPath));
+                                            } else {
+                                                Toast.makeText(SelectFileActivity.this, R.string.fs_folder_create_fail, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+                                }
+                            }).show();
+                }
+            });
         }
-        if (b) {
-            switchSelectAllState(true);
-        } else {
-            switchSelectAllState(false);
+        //显示蒙层
+        maskView.setVisibility(View.VISIBLE);
+        popupWindow.showAsDropDown(layoutTitle);
+    }
+
+    private class PopupMenuAdapter extends BaseListAdapter<String> {
+        PopupMenuAdapter(@NonNull Context context, @NonNull List<String> data) {
+            super(context, data);
+        }
+
+        @Override
+        protected BaseHolder<String> getHolder(int position) {
+            return new BaseHolder<String>() {
+                private TextView tv;
+                
+                @Override
+                protected void setData(@NonNull String data, int position) {
+                    tv.setText(data);
+                }
+
+                @Override
+                protected View createConvertView() {
+                    View view = View.inflate(getContext(), R.layout.fs_item_popup_menu, null);
+                    tv = view.findViewById(R.id.fstv);
+                    return view;
+                }
+            };
         }
     }
 }

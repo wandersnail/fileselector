@@ -1,15 +1,17 @@
 <resources>
-    <string name="all_files">全部文件</string>
-    <string name="root">根目录</string>
-    <string name="ok">确定</string>
-    <string name="cancel">取消</string>
-    <string name="selected_pattern">已选(%d)</string>
-    <string name="select_all">全选</string>
-    <string name="all_not_select">全不选</string>
-    <string name="clear">清空</string>
-    <string name="close">关闭</string>
-    <string name="dir">文件夹</string>
-    <string name="single_item_pattern">%d项</string>
-    <string name="multi_item_pattern">%d项</string>
-    <string name="selected_item_pattern">已选%d项</string>
+    <string name="fs_all_files">全部文件</string>
+    <string name="fs_root">根目录</string>
+    <string name="fs_ok">确定</string>
+    <string name="fs_cancel">取消</string>
+    <string name="fs_selected_pattern">已选(%d)</string>
+    <string name="fs_select_all">全选</string>
+    <string name="fs_all_not_select">全不选</string>
+    <string name="fs_clear">清空</string>
+    <string name="fs_close">关闭</string>
+    <string name="fs_single_item_pattern">%d项</string>
+    <string name="fs_multi_item_pattern">%d项</string>
+    <string name="fs_selected_item_pattern">已选%d项</string>
+    <string name="fs_new_folder">新建文件夹</string>
+    <string name="fs_folder_create_success">文件创建成功</string>
+    <string name="fs_folder_create_fail">文件创建失败</string>
 </resources>

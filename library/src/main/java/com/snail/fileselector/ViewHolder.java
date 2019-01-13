@@ -1,7 +1,6 @@
 package com.snail.fileselector;
 
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +12,7 @@ class ViewHolder {
     TextView tvName;
     TextView tvDesc;
     ImageView iv;
-    CheckBox chkBox;
+    ImageView ivSelect;
     View chkView;
     int position;
 }

@@ -1,9 +1,8 @@
 <resources>
 
     <!--对话框进入退出动画-->
-    <style name="DialogAnimFromBottom" parent="@android:style/Theme.Holo.DialogWhenLarge">
-        <item name="android:windowEnterAnimation">@anim/dialog_in_from_bottom</item>
-        <item name="android:windowExitAnimation">@anim/dialog_out_from_bottom</item>
+    <style name="FsDialogAnimFromBottom" parent="@android:style/Theme.Holo.DialogWhenLarge">
+        <item name="android:windowEnterAnimation">@anim/fs_dialog_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/fs_dialog_out_from_bottom</item>
     </style>
-   
 </resources>

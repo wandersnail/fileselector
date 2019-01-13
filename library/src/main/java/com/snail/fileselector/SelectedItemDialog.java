@@ -35,7 +35,7 @@ class SelectedItemDialog extends Dialog implements View.OnClickListener {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setPadding(0, 0, 0, 0);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            window.setWindowAnimations(R.style.DialogAnimFromBottom);
+            window.setWindowAnimations(R.style.FsDialogAnimFromBottom);
             WindowManager.LayoutParams lp = window.getAttributes();
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
             lp.height = WindowManager.LayoutParams.MATCH_PARENT;
@@ -45,34 +45,34 @@ class SelectedItemDialog extends Dialog implements View.OnClickListener {
     }
 
     private View inflateView(Context context) {
-        View view = View.inflate(context, R.layout.dialog_selected_item, null);
-        View layoutTitle = view.findViewById(R.id.layoutTitle);
-        layoutTitle.setBackgroundColor(Utils.getPrimaryColor(context));        
-        tvTitle = view.findViewById(R.id.tvTitle);
-        View statusBar = view.findViewById(R.id.statusBar);
-        statusBar.setBackgroundColor(Utils.getPrimaryColor(context));
+        View view = View.inflate(context, R.layout.fs_dialog_selected_item, null);
+        View layoutTitle = view.findViewById(R.id.fslayoutTitle);
+        layoutTitle.setBackgroundColor(activity.getThemeColors()[0]);        
+        tvTitle = view.findViewById(R.id.fstvTitle);
+        View statusBar = view.findViewById(R.id.fsstatusBar);
+        statusBar.setBackgroundColor(activity.getThemeColors()[0]);
         ViewGroup.LayoutParams params = statusBar.getLayoutParams();
         params.height = Utils.getStatusBarHeight(context);
         statusBar.setLayoutParams(params);
-        view.findViewById(R.id.tvClose).setOnClickListener(this);
-        view.findViewById(R.id.tvClear).setOnClickListener(this);
+        view.findViewById(R.id.fstvClose).setOnClickListener(this);
+        view.findViewById(R.id.fstvClear).setOnClickListener(this);
         adapter = new FileListAdapter();
-        ListView lv = view.findViewById(R.id.lv);
+        ListView lv = view.findViewById(R.id.fslv);
         lv.setAdapter(adapter);
         return view;
     }
 
     void updateList(List<Item> selectItemList) {
         itemList = selectItemList;
-        tvTitle.setText(String.format(activity.getString(R.string.selected_item_pattern), itemList.size()));
+        tvTitle.setText(String.format(activity.getString(R.string.fs_selected_item_pattern), itemList.size()));
         adapter.notifyDataSetChanged();
     }
     
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.tvClear) {
+        if (v.getId() == R.id.fstvClear) {
             activity.clearSelectedFileList();
-        } else if (v.getId() == R.id.tvClose) {
+        } else if (v.getId() == R.id.fstvClose) {
             dismiss();
         }
     }
@@ -103,15 +103,15 @@ class SelectedItemDialog extends Dialog implements View.OnClickListener {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = View.inflate(getContext(), R.layout.file_item_view, null);
+                convertView = View.inflate(getContext(), R.layout.fs_file_item_view, null);
                 holder = new ViewHolder();
                 convertView.setTag(holder);
-                holder.tvName = convertView.findViewById(R.id.tvName);
-                holder.tvDesc = convertView.findViewById(R.id.tvDesc);
+                holder.tvName = convertView.findViewById(R.id.fstvName);
+                holder.tvDesc = convertView.findViewById(R.id.fstvDesc);
                 holder.iv = convertView.findViewById(R.id.iv);
-                holder.chkBox = convertView.findViewById(R.id.chkBox);
-                holder.chkBox.setVisibility(View.INVISIBLE);
-                holder.chkView = convertView.findViewById(R.id.chkView);
+                holder.ivSelect = convertView.findViewById(R.id.fsivSelect);
+                holder.ivSelect.setVisibility(View.INVISIBLE);
+                holder.chkView = convertView.findViewById(R.id.fschkView);
                 holder.chkView.setTag(holder);
                 holder.chkView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -119,7 +119,7 @@ class SelectedItemDialog extends Dialog implements View.OnClickListener {
                         ViewHolder h = (ViewHolder) v.getTag();
                         Item item = getItem(h.position);
                         item.checked = false;
-                        activity.updateSelectedFileList(item);
+                        activity.updateSelectedFileList(item, true);
                     }
                 });
             } else {
@@ -162,7 +162,12 @@ class SelectedItemDialog extends Dialog implements View.OnClickListener {
                     ImageLoader.getInstance().loadImage(R.drawable.fs_file, holder.iv);
                 }
             }
-            holder.chkBox.setChecked(item.checked);
+            holder.ivSelect.setSelected(item.checked);
+            if (item.checked) {
+                holder.ivSelect.setColorFilter(activity.getThemeColors()[0]);
+            } else {
+                holder.ivSelect.setColorFilter(Color.LTGRAY);
+            }
             return convertView;
         }
     }

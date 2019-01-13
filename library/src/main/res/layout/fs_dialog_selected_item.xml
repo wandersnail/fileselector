@@ -6,17 +6,17 @@
               android:layout_height="match_parent">
 
     <View
-        android:id="@+id/statusBar"
+        android:id="@+id/fsstatusBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
     
     <RelativeLayout
-        android:id="@+id/layoutTitle"
+        android:id="@+id/fslayoutTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <TextView
-            android:id="@+id/tvClose"
-            android:text="@string/close"
+            android:id="@+id/fstvClose"
+            android:text="@string/fs_close"
             android:textColor="@color/fsWhite"
             android:gravity="center"
             android:textSize="16dp"
@@ -26,18 +26,18 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/fstvTitle"
             android:textSize="16dp"
-            android:text="@string/selected_item_pattern"
+            android:text="@string/fs_selected_item_pattern"
             android:layout_centerInParent="true"
             android:textColor="@color/fsWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
-            android:id="@+id/tvClear"
+            android:id="@+id/fstvClear"
             android:background="@drawable/fs_simple_btn_bg"
             android:layout_alignParentEnd="true"
-            android:text="@string/clear"
+            android:text="@string/fs_clear"
             android:textColor="@color/fsWhite"
             android:gravity="center"
             android:textSize="16dp"
@@ -47,7 +47,7 @@
             android:layout_height="match_parent"/>
     </RelativeLayout>
     <ListView
-        android:id="@+id/lv"
+        android:id="@+id/fslv"
         android:divider="@null"
         android:overScrollMode="never"
         android:layout_width="match_parent"
