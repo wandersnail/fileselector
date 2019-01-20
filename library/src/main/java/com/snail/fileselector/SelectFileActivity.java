@@ -293,6 +293,9 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
         if (tvAll.getVisibility() == View.VISIBLE && selectItemList.containsAll(itemList)) {
             switchSelectAllState(true);
         }
+        File file = new File(currentPath == null ? "" : currentPath);
+        tvOk.setEnabled(!selectItemList.isEmpty() || (!isSlectFile && file.exists()));
+        
         adapter.notifyDataSetChanged();
         scrollView.post(new Runnable() {
             @Override
@@ -361,11 +364,17 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
                 for (Item item : selectItemList) {
                     pathList.add(item.file.getAbsolutePath());
                 }
-                intent.putExtra(EXTRA_SELECTED_FILE_PATH_LIST, pathList);
+                if (pathList.isEmpty() && currentPath != null) {
+                    pathList.add(currentPath);
+                }
             } else {
-                pathList.add(selectItemList.get(0).file.getAbsolutePath());
-                intent.putExtra(EXTRA_SELECTED_FILE_PATH_LIST, pathList);
+                if (!selectItemList.isEmpty()) {
+                    pathList.add(selectItemList.get(0).file.getAbsolutePath());
+                } else if (currentPath != null) {
+                    pathList.add(currentPath);
+                }                
             }
+            intent.putExtra(EXTRA_SELECTED_FILE_PATH_LIST, pathList);
             setResult(RESULT_OK, intent);
             finish();
         } else if (v.getId() == R.id.fstvCancel) {
@@ -564,7 +573,8 @@ public class SelectFileActivity extends Activity implements View.OnClickListener
     }
 
     private void updateViews() {
-        tvOk.setEnabled(!selectItemList.isEmpty());
+        File file = new File(currentPath == null ? "" : currentPath);
+        tvOk.setEnabled(!selectItemList.isEmpty() || (!isSlectFile && file.exists()));
         updateSelectedText();
         adapter.notifyDataSetChanged();
         selectedItemDialog.updateList(selectItemList);
