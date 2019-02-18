@@ -17,8 +17,8 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.os.storage.StorageManager;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.os.EnvironmentCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.os.EnvironmentCompat;
 import android.util.TypedValue;
 
 import java.io.File;

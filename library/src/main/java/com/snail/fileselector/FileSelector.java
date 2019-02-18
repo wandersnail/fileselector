@@ -1,18 +1,19 @@
 package com.snail.fileselector;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
 import java.io.File;
 import java.io.FilenameFilter;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * 描述:
@@ -102,6 +103,13 @@ public class FileSelector {
      * 开始选择
      */
     public void select(@NonNull Fragment fragment) {
+        fragment.startActivityForResult(obtainIntent(fragment.getActivity()), REQUEST_CODE);
+    }
+
+    /**
+     * 开始选择
+     */
+    public void select(@NonNull androidx.fragment.app.Fragment fragment) {
         fragment.startActivityForResult(obtainIntent(fragment.getActivity()), REQUEST_CODE);
     }
 

@@ -1,7 +1,8 @@
 package com.snail.fileselector;
 
-import android.support.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 /**
  * date: 2019/1/13 14:02

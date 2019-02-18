@@ -1,7 +1,7 @@
 package com.snail.fileselector;
 
 import android.os.Environment;
-import android.support.v4.os.EnvironmentCompat;
+import androidx.core.os.EnvironmentCompat;
 
 /**
  * 描述: 存储
