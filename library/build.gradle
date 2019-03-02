@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+def lib_version = '1.1.0'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -7,7 +11,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
-        versionName '1.1.0'
+        versionName "$lib_version"
     }
 
     buildTypes {
@@ -24,6 +28,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly "androidx.appcompat:appcompat:$appcompat_version"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 // 打包源码
@@ -41,7 +46,7 @@ publish {
     userOrg = 'wandersnail' //bintray.com用户名  
     groupId = 'com.github.wandersnail' //jcenter上的路径
     artifactId = 'fileselector' //项目名称  
-    publishVersion = '1.1.0' //版本号  
+    publishVersion = "$lib_version" //版本号  
     desc = '文件选择器，支持选择文件夹及多选'
     website = 'https://github.com/wandersnail'
 }

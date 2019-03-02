@@ -14,7 +14,7 @@
         android:layout_height="40dp"/>
 
     <ImageView
-        android:id="@+id/fsivSelect"
+        android:id="@+id/fsIvSelect"
         android:src="@drawable/fs_chkbox_bg"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
@@ -32,7 +32,7 @@
         android:background="@drawable/fs_del"/>
     
     <Button
-        android:id="@+id/fschkView"
+        android:id="@+id/fsChkView"
         android:focusable="false"
         android:background="@color/fsTransparent"
         android:layout_alignParentEnd="true"
@@ -43,20 +43,20 @@
         android:id="@+id/fslayoutInfo"
         android:orientation="vertical"
         android:layout_toEndOf="@id/iv"
-        android:layout_toStartOf="@id/fsivSelect"
+        android:layout_toStartOf="@id/fsIvSelect"
         android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/fstvName"
+            android:id="@+id/fsTvName"
             android:text="html入门到精通"
             android:textColor="@color/fsYahei"
             android:textSize="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
-            android:id="@+id/fstvDesc"
+            android:id="@+id/fsTvDesc"
             android:text="5.4M"
             android:textSize="12dp"
             android:textColor="@color/fsEditHint"
@@ -66,7 +66,7 @@
     <View
         android:alpha="0.5"
         android:layout_alignStart="@id/fslayoutInfo"
-        android:layout_alignEnd="@id/fsivSelect"
+        android:layout_alignEnd="@id/fsIvSelect"
         android:layout_alignParentBottom="true"
         android:background="@color/fsDivider"
         android:layout_width="match_parent"

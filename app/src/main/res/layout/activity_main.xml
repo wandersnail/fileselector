@@ -38,6 +38,21 @@
             android:text="多选文件夹"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnSelectSingleFileDir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单选文件或文件夹"/>
+        <Button
+            android:id="@+id/btnSelectMultiFileDir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="多选文件或文件夹"/>
+    </LinearLayout>
+    
     <TextView        
         android:text="选择的路径:"
         android:layout_width="wrap_content"
