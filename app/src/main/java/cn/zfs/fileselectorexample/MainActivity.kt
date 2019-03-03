@@ -21,8 +21,8 @@ class MainActivity : CheckPermissionsActivity() {
                 .setFilenameFilter(FilenameFilter { _, name ->
                     name != null && !name.startsWith(".")
                 })
-        //设置根目录，如果不设置，默认列出所有存储路径作为根目录
-        selector!!.setRoot(null)
+        //设置根目录，如果不设置，默认为内部存储，设置null列出所有存储路径作为根目录
+//        selector!!.setRoot(null)
         btnSelectMultiFile.setOnClickListener {
             selector!!.setMultiSelectionEnabled(true)
             selector!!.setSelectionMode(FileSelector.FILES_ONLY)

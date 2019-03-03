@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -25,7 +26,7 @@ import java.util.*
  * Created by zeng on 2017/3/1.
  */
 
-class SelectFileActivity : Activity(), AdapterView.OnItemClickListener {
+class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     private var selectionMode = FileSelector.FILES_ONLY
     private var isMultiSelect: Boolean = false
     private val posList = ArrayList<IntArray>()
@@ -178,6 +179,7 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener {
         adapter = FileListAdapter()
         fsLv.adapter = adapter
         fsLv.onItemClickListener = this
+        fsLv.onItemLongClickListener = this
         loadFiles(rootFile)
     }
     
@@ -385,6 +387,62 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener {
         }
     }
 
+    override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
+        if (currentPath != null) {
+            val item = itemList[position]
+            ActionDialog(this, arrayListOf(textHolder.getText(TextHolder.RENAME), textHolder.getText(TextHolder.DELETE))) {
+                when (it) {
+                    0 -> showInputDialog(textHolder.getText(TextHolder.RENAME), item.file!!.name, null) { filename ->
+                        val file = File(currentPath, filename)
+                        if (!file.exists()) {
+                            val b = item.file!!.renameTo(file)
+                            if (b) {
+                                Toast.makeText(this, textHolder.getText(TextHolder.RENAME_SUCCESS), Toast.LENGTH_SHORT).show()
+                                loadFiles(File(currentPath!!))
+                            } else {
+                                Toast.makeText(this, textHolder.getText(TextHolder.RENAME_FAILED), Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            Toast.makeText(this, textHolder.getText(TextHolder.RENAME_FAILED), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    1 -> AlertDialog.Builder(this)
+                            .setMessage(textHolder.getText(TextHolder.ENSURE_DELETE_PROMPT))
+                            .setNegativeButton(textHolder.getText(TextHolder.CANCEL), null)
+                            .setPositiveButton(textHolder.getText(TextHolder.OK)) { _, _ ->
+                                item.file?.delete()
+                                loadFiles(File(currentPath!!))
+                            }.show()
+                }
+            }.show()
+        }
+        return true
+    }
+    
+    private fun showInputDialog(title: String, fill: String?, hint: String?, callback: (String) -> Unit) {
+        val layout = FrameLayout(this)
+        val et = EditText(this)
+        if (!TextUtils.isEmpty(fill)) {
+            et.setText(fill)
+            et.setSelection(fill!!.length)
+        }
+        if (!TextUtils.isEmpty(hint)) {
+            et.hint = hint
+        }
+        val padding = Utils.dp2px(this, 8f)
+        layout.setPadding(padding, 0, padding, 0)
+        layout.addView(et)
+        AlertDialog.Builder(this)
+                .setTitle(title)
+                .setView(layout)
+                .setNegativeButton(textHolder.getText(TextHolder.CANCEL), null)
+                .setPositiveButton(textHolder.getText(TextHolder.OK)) { _, _ ->
+                    if (et.text != null && !et.text.toString().trim { it <= ' ' }.isEmpty()) {
+                        callback.invoke(et.text.toString().trim { it <= ' ' })
+                    }
+                }.show()
+    }
+
     private inner class FileListAdapter internal constructor() : BaseAdapter() {
 
         init {
@@ -563,31 +621,18 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener {
             }
             lv.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
                 popupWindow!!.dismiss()
-                //显示设置文件夹名称对话框
-                val layout = FrameLayout(this@SelectFileActivity)
-                val et = EditText(this@SelectFileActivity)
-                val padding = Utils.dp2px(this@SelectFileActivity, 8f)
-                layout.setPadding(padding, 0, padding, 0)
-                layout.addView(et)
-                AlertDialog.Builder(this@SelectFileActivity)
-                        .setTitle(textHolder.getText(TextHolder.NEW_FOLDER))
-                        .setView(layout)
-                        .setNegativeButton(textHolder.getText(TextHolder.CANCEL), null)
-                        .setPositiveButton(textHolder.getText(TextHolder.OK)) { _, _ ->
-                            if (et.text != null && !et.text.toString().trim { it <= ' ' }.isEmpty()) {
-                                val dirName = et.text.toString().trim { it <= ' ' }
-                                val file = File(currentPath, dirName)
-                                //不存在才新建
-                                if (!file.exists()) {
-                                    if (file.mkdir()) {
-                                        Toast.makeText(this@SelectFileActivity, textHolder.getText(TextHolder.FOLDER_CREATE_SUCCESS), Toast.LENGTH_SHORT).show()
-                                        loadFiles(File(currentPath!!))
-                                    } else {
-                                        Toast.makeText(this@SelectFileActivity, textHolder.getText(TextHolder.FOLDER_CREATE_FAILED), Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        }.show()
+                showInputDialog(textHolder.getText(TextHolder.NEW_FOLDER), null, null) { dirName ->
+                    val file = File(currentPath, dirName)
+                    //不存在才新建
+                    if (!file.exists()) {
+                        if (file.mkdir()) {
+                            Toast.makeText(this, textHolder.getText(TextHolder.FOLDER_CREATE_SUCCESS), Toast.LENGTH_SHORT).show()
+                            loadFiles(File(currentPath!!))
+                        } else {
+                            Toast.makeText(this, textHolder.getText(TextHolder.FOLDER_CREATE_FAILED), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
         //显示蒙层

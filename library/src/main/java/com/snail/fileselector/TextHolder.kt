@@ -31,9 +31,13 @@ internal class TextHolder {
         zhCN.put(MULTI_ITEM_PATTERN, "%d项")
         zhCN.put(SELECTED_ITEM_PATTERN, "已选%d项")
         zhCN.put(NEW_FOLDER, "新建文件夹")
-        zhCN.put(FOLDER_CREATE_SUCCESS, "文件创建成功")
-        zhCN.put(FOLDER_CREATE_FAILED, "文件创建失败")
+        zhCN.put(FOLDER_CREATE_SUCCESS, "文件夹创建成功")
+        zhCN.put(FOLDER_CREATE_FAILED, "文件夹创建失败")
         zhCN.put(RENAME, "重命名")
+        zhCN.put(RENAME_SUCCESS, "重命名成功")
+        zhCN.put(RENAME_FAILED, "重命名失败")
+        zhCN.put(DELETE, "删除")
+        zhCN.put(ENSURE_DELETE_PROMPT, "确定删除吗")
         lanArr.put(Language.SIMPLIFIED_CHINESE.value, zhCN)
 
         val zhTW = SparseArray<String>()
@@ -49,10 +53,14 @@ internal class TextHolder {
         zhTW.put(SINGLE_ITEM_PATTERN, "%d項")
         zhTW.put(MULTI_ITEM_PATTERN, "%d項")
         zhTW.put(SELECTED_ITEM_PATTERN, "已選%d項")
-        zhTW.put(NEW_FOLDER, "新建文件夾")
-        zhTW.put(FOLDER_CREATE_SUCCESS, "文件創建成功")
-        zhTW.put(FOLDER_CREATE_FAILED, "文件創建失敗")
+        zhTW.put(NEW_FOLDER, "新建資料夾")
+        zhTW.put(FOLDER_CREATE_SUCCESS, "資料夾創建成功")
+        zhTW.put(FOLDER_CREATE_FAILED, "資料夾創建失敗")
         zhTW.put(RENAME, "重命名")
+        zhTW.put(RENAME_SUCCESS, "重命名成功")
+        zhTW.put(RENAME_FAILED, "重命名失敗")
+        zhTW.put(DELETE, "刪除")
+        zhTW.put(ENSURE_DELETE_PROMPT, "確定刪除嗎")
         lanArr.put(Language.TRADITIONAL_CHINESE.value, zhTW)
 
         val en = SparseArray<String>()
@@ -72,6 +80,10 @@ internal class TextHolder {
         en.put(FOLDER_CREATE_SUCCESS, "The folder creation successfully")
         en.put(FOLDER_CREATE_FAILED, "The folder creation failed")
         en.put(RENAME, "Rename")
+        en.put(RENAME_SUCCESS, "Rename successfully")
+        en.put(RENAME_FAILED, "Rename failed")
+        en.put(DELETE, "Delete")
+        en.put(ENSURE_DELETE_PROMPT, "Are you sure you want to delete it?")
         lanArr.put(Language.ENGLISH.value, en)
     }
     
@@ -92,5 +104,9 @@ internal class TextHolder {
         const val FOLDER_CREATE_SUCCESS = 13
         const val FOLDER_CREATE_FAILED = 14
         const val RENAME = 15
+        const val DELETE = 16
+        const val ENSURE_DELETE_PROMPT = 17
+        const val RENAME_SUCCESS = 18
+        const val RENAME_FAILED = 19
     }
 }
