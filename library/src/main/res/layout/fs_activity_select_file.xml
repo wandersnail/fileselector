@@ -150,7 +150,7 @@
     <View
         android:id="@+id/fsMaskView"
         android:visibility="gone"
-        android:background="#9222"
+        android:background="#8222"
         android:layout_below="@id/fsLayoutTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

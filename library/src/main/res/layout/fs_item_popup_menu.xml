@@ -8,6 +8,6 @@
           android:paddingEnd="20dp"
           android:paddingStart="20dp"
           android:textColor="@color/fsYahei"
-          android:textSize="14dp">
+          android:textSize="16dp">
 
 </TextView>

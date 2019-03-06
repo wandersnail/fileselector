@@ -18,9 +18,8 @@ class MainActivity : CheckPermissionsActivity() {
         setContentView(R.layout.activity_main)
         selector = FileSelector().setScreenOrientation(false)
                 .setThemeColor(getColorByAttrId(this, R.attr.colorPrimary), getColorByAttrId(this, R.attr.colorPrimaryDark))
-                .setFilenameFilter(FilenameFilter { _, name ->
-                    name != null && !name.startsWith(".")
-                })
+                .showHiddenFiles(false)
+                .setFilenameFilter(FilenameFilter { dir, name -> !name.endsWith(".txt") })
         //设置根目录，如果不设置，默认为内部存储，设置null列出所有存储路径作为根目录
 //        selector!!.setRoot(null)
         btnSelectMultiFile.setOnClickListener {

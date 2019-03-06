@@ -38,6 +38,8 @@ internal class TextHolder {
         zhCN.put(RENAME_FAILED, "重命名失败")
         zhCN.put(DELETE, "删除")
         zhCN.put(ENSURE_DELETE_PROMPT, "确定删除吗")
+        zhCN.put(SHOW_HIDDEN_FILES, "显示隐藏文件")
+        zhCN.put(DONOT_SHOW_HIDDEN_FILES, "不显示隐藏文件")
         lanArr.put(Language.SIMPLIFIED_CHINESE.value, zhCN)
 
         val zhTW = SparseArray<String>()
@@ -61,6 +63,8 @@ internal class TextHolder {
         zhTW.put(RENAME_FAILED, "重命名失敗")
         zhTW.put(DELETE, "刪除")
         zhTW.put(ENSURE_DELETE_PROMPT, "確定刪除嗎")
+        zhTW.put(SHOW_HIDDEN_FILES, "顯示隱藏文件")
+        zhTW.put(DONOT_SHOW_HIDDEN_FILES, "不顯示隱藏文件")
         lanArr.put(Language.TRADITIONAL_CHINESE.value, zhTW)
 
         val en = SparseArray<String>()
@@ -84,6 +88,8 @@ internal class TextHolder {
         en.put(RENAME_FAILED, "Rename failed")
         en.put(DELETE, "Delete")
         en.put(ENSURE_DELETE_PROMPT, "Are you sure you want to delete it?")
+        en.put(SHOW_HIDDEN_FILES, "Show hidden files")
+        en.put(DONOT_SHOW_HIDDEN_FILES, "Don't show hidden files")
         lanArr.put(Language.ENGLISH.value, en)
     }
     
@@ -108,5 +114,7 @@ internal class TextHolder {
         const val ENSURE_DELETE_PROMPT = 17
         const val RENAME_SUCCESS = 18
         const val RENAME_FAILED = 19
+        const val SHOW_HIDDEN_FILES = 20
+        const val DONOT_SHOW_HIDDEN_FILES = 21
     }
 }

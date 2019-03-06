@@ -26,7 +26,13 @@ class FileSelector {
     private var title: String? = null
     private var themeColors: IntArray? = null    
     private var language = Language.SIMPLIFIED_CHINESE
-    
+    private var showHiddenFiles = false
+
+    /**
+     * 设置根目录，默认是内部存储
+     * 
+     * @param root 当设置为null时，列出当前所有可用储存设备
+     */
     fun setRoot(root: File?): FileSelector {
         this.root = root
         return this
@@ -37,6 +43,14 @@ class FileSelector {
      */
     fun setLanguage(language: Language): FileSelector {
         this.language = language
+        return this
+    }
+
+    /**
+     * 设置是否显示隐藏文件和文件夹
+     */
+    fun showHiddenFiles(show: Boolean): FileSelector {
+        showHiddenFiles = show
         return this
     }
 
@@ -121,6 +135,7 @@ class FileSelector {
         intent.putExtra(SelectFileActivity.EXTRA_SELECTION_MODE, selectionMode)
         intent.putExtra(SelectFileActivity.EXTRA_IS_MULTI_SELECT, isMultiSelectionEnabled)
         intent.putExtra(SelectFileActivity.EXTRA_LANGUAGE, language.value)
+        intent.putExtra(SelectFileActivity.EXTRA_SHOW_HIDDEN_FILES, showHiddenFiles)
         if (title != null) {
             intent.putExtra(SelectFileActivity.EXTRA_TITLE, title)
         }

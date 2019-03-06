@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.fs_listview.*
 internal class ActionDialog(activity: SelectFileActivity, items: ArrayList<String>, listener: (Int) -> Unit) : Dialog(activity) {
     
     init {
+        window?.requestFeature(Window.FEATURE_NO_TITLE)
         window?.decorView?.setPadding(0, 0, 0, 0)
         window?.setBackgroundDrawable(ContextCompat.getDrawable(activity, R.drawable.fs_action_dialog_bg))
         window?.setWindowAnimations(R.style.FsDialogAnimFromBottom)

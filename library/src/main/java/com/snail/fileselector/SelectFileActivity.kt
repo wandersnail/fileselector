@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.AlphaAnimation
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.fs_activity_select_file.*
 import java.io.File
 import java.io.FilenameFilter
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by zeng on 2017/3/1.
@@ -41,8 +43,8 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
     private var title: String? = null//标题
     var themeColors: IntArray? = null
         private set
-    private var popupWindow: PopupWindow? = null
     internal val textHolder = TextHolder()
+    private var showHiddenFiles = false//设置是否显示隐藏文件和文件夹
 
     private val comparator = Comparator<Item> { o1, o2 ->
         if (o1 == null) {
@@ -266,6 +268,7 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
         } else {
             this.themeColors = themeColors
         }
+        showHiddenFiles = intent.getBooleanExtra(EXTRA_SHOW_HIDDEN_FILES, false)
     }
 
     private fun loadFiles(dir: File?) {
@@ -284,24 +287,11 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
                 }
             }
         } else {
-            val files = if (filenameFilter != null) {
-                dir.listFiles(filenameFilter)
-            } else {
-                dir.listFiles()
-            }
-            if (files != null) {
-                for (file in files) {
-                    if (selectionMode == FileSelector.DIRECTORIES_ONLY) {
-                        if (file.isDirectory) {
-                            dirList.add(Item(file, isSelectedItem(file)))
-                        }
-                    } else {
-                        if (file.isDirectory) {
-                            dirList.add(Item(file, isSelectedItem(file)))
-                        } else {
-                            fList.add(Item(file, isSelectedItem(file)))
-                        }
-                    }
+            dir.listFiles()?.forEach { file ->
+                if (showHiddenFiles && file.name.startsWith(".")) {
+                    handleFileList(file, dirList, fList)
+                } else if (!file.name.startsWith(".") && (filenameFilter == null || filenameFilter!!.accept(file, file.name))) {
+                    handleFileList(file, dirList, fList)
                 }
             }
         }
@@ -335,6 +325,20 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
 
         adapter!!.notifyDataSetChanged()
         fsScrollView.post { fsScrollView.fullScroll(ScrollView.FOCUS_RIGHT) }
+    }
+
+    private fun handleFileList(file: File, dirList: ArrayList<Item>, fList: ArrayList<Item>) {
+        if (selectionMode == FileSelector.DIRECTORIES_ONLY) {
+            if (file.isDirectory) {
+                dirList.add(Item(file, isSelectedItem(file)))
+            }
+        } else {
+            if (file.isDirectory) {
+                dirList.add(Item(file, isSelectedItem(file)))
+            } else {
+                fList.add(Item(file, isSelectedItem(file)))
+            }
+        }
     }
 
     //是否已被选
@@ -497,19 +501,14 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
                 //选择文件时，不可点击，不显示选框
                 holder.chkView!!.isClickable = selectionMode != FileSelector.FILES_ONLY
                 holder.ivSelect!!.visibility = if (selectionMode == FileSelector.FILES_ONLY) View.INVISIBLE else View.VISIBLE
-                val files = if (filenameFilter != null) {
-                    item.file!!.listFiles(filenameFilter)
-                } else {
-                    item.file!!.listFiles()
-                }
                 var num = 0
                 //如果是选择文件夹，文件不计数
-                if (files != null) {
-                    for (f in files) {
-                        if ((selectionMode == FileSelector.FILES_ONLY && f.isFile) ||
-                                (selectionMode == FileSelector.DIRECTORIES_ONLY && f.isDirectory) ||
+                item.file?.listFiles()?.forEach { 
+                    if (showHiddenFiles && it.name.startsWith(".") || filenameFilter != null && filenameFilter!!.accept(it, it.name)) {
+                        if ((selectionMode == FileSelector.FILES_ONLY && it.isFile) ||
+                                (selectionMode == FileSelector.DIRECTORIES_ONLY && it.isDirectory) ||
                                 selectionMode == FileSelector.FILES_AND_DIRECTORIES) {
-                            num ++
+                            num++
                         }
                     }
                 }
@@ -606,38 +605,51 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
     }
 
     private fun showPopupWindow() {
-        if (popupWindow == null) {
-            val lv = View.inflate(this, R.layout.fs_listview, null) as ListView
-            val items = ArrayList<String>()
-            items.add(textHolder.getText(TextHolder.NEW_FOLDER))
-            lv.adapter = PopupMenuAdapter(this, items)
-            popupWindow = PopupWindow(lv, Utils.getDisplayScreenWidth(this), Utils.dp2px(this, 50f))
-            popupWindow!!.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.fs_popun_menu_bg))
-            popupWindow!!.isFocusable = true
-            popupWindow!!.isOutsideTouchable = true
-            popupWindow!!.setOnDismissListener {
-                //pop消失，去掉蒙层
-                fsMaskView.visibility = View.GONE
-            }
-            lv.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
-                popupWindow!!.dismiss()
-                showInputDialog(textHolder.getText(TextHolder.NEW_FOLDER), null, null) { dirName ->
-                    val file = File(currentPath, dirName)
-                    //不存在才新建
-                    if (!file.exists()) {
-                        if (file.mkdir()) {
-                            Toast.makeText(this, textHolder.getText(TextHolder.FOLDER_CREATE_SUCCESS), Toast.LENGTH_SHORT).show()
-                            loadFiles(File(currentPath!!))
-                        } else {
-                            Toast.makeText(this, textHolder.getText(TextHolder.FOLDER_CREATE_FAILED), Toast.LENGTH_SHORT).show()
+        val lv = View.inflate(this, R.layout.fs_listview, null) as ListView
+        val items = ArrayList<String>()
+        items.add(textHolder.getText(TextHolder.NEW_FOLDER))
+        items.add(textHolder.getText(if (showHiddenFiles) TextHolder.DONOT_SHOW_HIDDEN_FILES else TextHolder.SHOW_HIDDEN_FILES))
+        lv.adapter = PopupMenuAdapter(this, items)
+        val height = items.size * Utils.dp2px(this, 50f) + items.size
+        val popupWindow = PopupWindow(lv, Utils.getDisplayScreenWidth(this), height)
+        popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.fs_popun_menu_bg))
+        popupWindow.isFocusable = true
+        popupWindow.isOutsideTouchable = true
+        popupWindow.setOnDismissListener {
+            //pop消失，去掉蒙层
+            fsMaskView.clearAnimation()
+            fsMaskView.visibility = View.GONE
+        }
+        lv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            popupWindow.dismiss()
+            when (position) {
+                0 -> {
+                    showInputDialog(textHolder.getText(TextHolder.NEW_FOLDER), null, null) { dirName ->
+                        val file = File(currentPath, dirName)
+                        //不存在才新建
+                        if (!file.exists()) {
+                            if (file.mkdir()) {
+                                Toast.makeText(this, textHolder.getText(TextHolder.FOLDER_CREATE_SUCCESS), Toast.LENGTH_SHORT).show()
+                                loadFiles(File(currentPath!!))
+                            } else {
+                                Toast.makeText(this, textHolder.getText(TextHolder.FOLDER_CREATE_FAILED), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
+                }
+                1 -> {
+                    showHiddenFiles = !showHiddenFiles
+                    loadFiles(if (currentPath == null) null else File(currentPath))
                 }
             }
         }
         //显示蒙层
         fsMaskView.visibility = View.VISIBLE
-        popupWindow!!.showAsDropDown(fsLayoutTitle)
+        val alphaAnimation = AlphaAnimation(0f, 1f)
+        alphaAnimation.duration = 300
+        alphaAnimation.fillAfter = true
+        fsMaskView.startAnimation(alphaAnimation)
+        popupWindow.showAsDropDown(fsLayoutTitle)
     }
 
     private inner class PopupMenuAdapter internal constructor(context: Context, data: MutableList<String>) : BaseListAdapter<String>(context, data) {
@@ -646,8 +658,12 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
             return object : BaseHolder<String>() {
                 private var tv: TextView? = null
 
-                override fun setData(data: String, position: Int) {
-                    tv!!.text = data
+                override fun setData(data: String, position: Int) {                    
+                    if (position == 1) {
+                        tv!!.text = textHolder.getText(if (showHiddenFiles) TextHolder.DONOT_SHOW_HIDDEN_FILES else TextHolder.SHOW_HIDDEN_FILES)
+                    } else {
+                        tv!!.text = data
+                    }
                 }
 
                 override fun createConvertView(): View {
@@ -670,6 +686,7 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
         internal const val EXTRA_TITLE = "TITLE"
         internal const val EXTRA_THEME_COLORS = "THEME_COLORS"
         internal const val EXTRA_LANGUAGE = "LANGUAGE"
+        internal const val EXTRA_SHOW_HIDDEN_FILES = "SHOW_HIDDEN_FILES"
         internal var filenameFilter: FilenameFilter? = null
     }
 }
