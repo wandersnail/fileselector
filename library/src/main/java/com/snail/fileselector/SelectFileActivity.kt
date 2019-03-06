@@ -502,14 +502,12 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
                 holder.chkView!!.isClickable = selectionMode != FileSelector.FILES_ONLY
                 holder.ivSelect!!.visibility = if (selectionMode == FileSelector.FILES_ONLY) View.INVISIBLE else View.VISIBLE
                 var num = 0
-                //如果是选择文件夹，文件不计数
-                item.file?.listFiles()?.forEach { 
-                    if (showHiddenFiles && it.name.startsWith(".") || filenameFilter != null && filenameFilter!!.accept(it, it.name)) {
-                        if ((selectionMode == FileSelector.FILES_ONLY && it.isFile) ||
-                                (selectionMode == FileSelector.DIRECTORIES_ONLY && it.isDirectory) ||
-                                selectionMode == FileSelector.FILES_AND_DIRECTORIES) {
-                            num++
-                        }
+                //如果是选择文件夹，文件不计数                
+                item.file?.listFiles()?.forEach {
+                    if (showHiddenFiles && it.name.startsWith(".")) {
+                        num++
+                    } else if (!it.name.startsWith(".") && (filenameFilter == null || filenameFilter!!.accept(it, it.name))) {
+                        num++
                     }
                 }
                 holder.tvDesc!!.text = String.format(textHolder.getText(if (num > 1) TextHolder.MULTI_ITEM_PATTERN else TextHolder.SINGLE_ITEM_PATTERN), num)
