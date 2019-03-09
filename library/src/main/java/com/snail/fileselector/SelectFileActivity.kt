@@ -288,7 +288,8 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
             }
         } else {
             dir.listFiles()?.forEach { file ->
-                if (showHiddenFiles && file.name.startsWith(".")) {
+                if (showHiddenFiles && file.name.startsWith(".") && ((file.isDirectory && selectionMode != FileSelector.FILES_ONLY) ||
+                                (file.isFile && selectionMode != FileSelector.DIRECTORIES_ONLY))) {
                     handleFileList(file, dirList, fList)
                 } else if (!file.name.startsWith(".") && (filenameFilter == null || filenameFilter!!.accept(file, file.name))) {
                     handleFileList(file, dirList, fList)
@@ -512,7 +513,8 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
                 var num = 0
                 //如果是选择文件夹，文件不计数                
                 item.file?.listFiles()?.forEach {
-                    if (showHiddenFiles && it.name.startsWith(".")) {
+                    if (showHiddenFiles && it.name.startsWith(".") && ((it.isDirectory && selectionMode != FileSelector.FILES_ONLY) ||
+                                    (it.isFile && selectionMode != FileSelector.DIRECTORIES_ONLY))) {
                         num++
                     } else if (!it.name.startsWith(".") && (filenameFilter == null || filenameFilter!!.accept(it, it.name))) {
                         num++
