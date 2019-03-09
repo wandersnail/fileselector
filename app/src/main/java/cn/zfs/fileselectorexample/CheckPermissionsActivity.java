@@ -160,7 +160,7 @@ public class CheckPermissionsActivity extends AppCompatActivity {
                 intent.setData(Uri.parse("package:" + getPackageName()));
                 startActivity(intent);
             }
-        });
+        });	    
 	}
 	
 	private void showDialog(String title, String msg, DialogInterface.OnClickListener listener) {

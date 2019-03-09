@@ -99,7 +99,7 @@ class FileSelector {
     /**
      * 设置文件名过滤器
      */
-    fun setFilenameFilter(filenameFilter: FilenameFilter): FileSelector {
+    fun setFilenameFilter(filenameFilter: FilenameFilter?): FileSelector {
         this.filenameFilter = filenameFilter
         return this
     }

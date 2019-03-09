@@ -23,8 +23,6 @@ internal class TextHolder {
         zhCN.put(OK, "确定")
         zhCN.put(CANCEL, "取消")
         zhCN.put(SELECTED_PATTERN, "已选(%d)")
-        zhCN.put(SELECT_ALL, "全选")
-        zhCN.put(ALL_NOT_SELECT, "全不选")
         zhCN.put(CLEAR, "清空")
         zhCN.put(CLOSE, "关闭")
         zhCN.put(SINGLE_ITEM_PATTERN, "%d项")
@@ -48,8 +46,6 @@ internal class TextHolder {
         zhTW.put(OK, "確定")
         zhTW.put(CANCEL, "取消")
         zhTW.put(SELECTED_PATTERN, "已選(%d)")
-        zhTW.put(SELECT_ALL, "全選")
-        zhTW.put(ALL_NOT_SELECT, "全不選")
         zhTW.put(CLEAR, "清空")
         zhTW.put(CLOSE, "關閉")
         zhTW.put(SINGLE_ITEM_PATTERN, "%d項")
@@ -73,8 +69,6 @@ internal class TextHolder {
         en.put(OK, "OK")
         en.put(CANCEL, "Cancel")
         en.put(SELECTED_PATTERN, "Selected(%d)")
-        en.put(SELECT_ALL, "Select all")
-        en.put(ALL_NOT_SELECT, "Deselect all")
         en.put(CLEAR, "Clear")
         en.put(CLOSE, "Close")
         en.put(SINGLE_ITEM_PATTERN, "%d item")
@@ -99,8 +93,6 @@ internal class TextHolder {
         const val OK = 2
         const val CANCEL = 3
         const val SELECTED_PATTERN = 4
-        const val SELECT_ALL = 5
-        const val ALL_NOT_SELECT = 6
         const val CLEAR = 7
         const val CLOSE = 8
         const val SINGLE_ITEM_PATTERN = 9

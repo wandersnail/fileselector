@@ -156,7 +156,7 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
     }
 
     private fun initViews() {
-        fsTvAll.text = textHolder.getText(TextHolder.ALL_FILES)
+        fsIvAll.setColorFilter(ContextCompat.getColor(this, R.color.fsDisable))
         fsTvRoot.text = textHolder.getText(TextHolder.ROOT)
         fsTvCancel.text = textHolder.getText(TextHolder.CANCEL)
         fsTvOk.text = textHolder.getText(TextHolder.OK)
@@ -192,7 +192,7 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
         fsIvMore.setOnClickListener {
             showPopupWindow()
         }
-        fsTvAll.setOnClickListener {
+        fsIvAll.setOnClickListener {
             switchSelectAll(!isSelectedAll)
         }
         fsTvSelected.setOnClickListener {
@@ -300,24 +300,24 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
         itemList.addAll(dirList)
         itemList.addAll(fList)
 
-        val tvAllLp = fsTvAll.layoutParams as RelativeLayout.LayoutParams
+        val ivAllLp = fsIvAll.layoutParams as RelativeLayout.LayoutParams
         if (dir == null) {
             fsIvMore.visibility = View.GONE
-            tvAllLp.addRule(RelativeLayout.ALIGN_PARENT_END)
+            ivAllLp.addRule(RelativeLayout.ALIGN_PARENT_END)
         } else {
             fsIvMore.visibility = View.VISIBLE
-            tvAllLp.removeRule(RelativeLayout.ALIGN_PARENT_END)
+            ivAllLp.removeRule(RelativeLayout.ALIGN_PARENT_END)
         }
-        fsTvAll.layoutParams = tvAllLp
+        fsIvAll.layoutParams = ivAllLp
         //只有多选，并且当选择文件时，文件列表不为空，当选择文件夹时，文件夹列表不为空
-        fsTvAll.visibility = if (isMultiSelect && (selectionMode == FileSelector.FILES_ONLY && fList.isNotEmpty() || 
+        fsIvAll.visibility = if (isMultiSelect && (selectionMode == FileSelector.FILES_ONLY && fList.isNotEmpty() || 
                         (selectionMode == FileSelector.DIRECTORIES_ONLY && dirList.isNotEmpty()) || 
                         (selectionMode == FileSelector.FILES_AND_DIRECTORIES && (fList.isNotEmpty() || dirList.isNotEmpty())))) {
             View.VISIBLE
         } else {
             View.INVISIBLE
         }
-        if (fsTvAll.visibility == View.VISIBLE && selectItemList.containsAll(itemList)) {
+        if (fsIvAll.visibility == View.VISIBLE && selectItemList.containsAll(itemList)) {
             switchSelectAllState(true)
         }
         val file = File(if (currentPath == null) "" else currentPath)
@@ -369,8 +369,12 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
     //清除全选状态，更新标题栏按钮文本
     private fun switchSelectAllState(selectAll: Boolean) {
         isSelectedAll = selectAll
-        fsTvAll.visibility = if (isMultiSelect) View.VISIBLE else View.INVISIBLE
-        fsTvAll.text = textHolder.getText(if (isSelectedAll) TextHolder.ALL_NOT_SELECT else TextHolder.SELECT_ALL)
+        fsIvAll.visibility = if (isMultiSelect) View.VISIBLE else View.INVISIBLE
+        if (isSelectedAll) {
+            fsIvAll.clearColorFilter()
+        } else {
+            fsIvAll.setColorFilter(ContextCompat.getColor(this, R.color.fsDisable))
+        }
     }
 
     private fun updateSelectedText() {
@@ -414,7 +418,11 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
                             .setMessage(textHolder.getText(TextHolder.ENSURE_DELETE_PROMPT))
                             .setNegativeButton(textHolder.getText(TextHolder.CANCEL), null)
                             .setPositiveButton(textHolder.getText(TextHolder.OK)) { _, _ ->
-                                item.file?.delete()
+                                if (item.file!!.isFile) {
+                                    item.file?.delete()
+                                } else {
+                                    FileUtils.deleteDir(item.file!!, true)
+                                }
                                 loadFiles(File(currentPath!!))
                             }.show()
                 }
