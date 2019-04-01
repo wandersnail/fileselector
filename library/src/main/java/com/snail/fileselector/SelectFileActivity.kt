@@ -291,7 +291,7 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
                 if (showHiddenFiles && file.name.startsWith(".") && ((file.isDirectory && selectionMode != FileSelector.FILES_ONLY) ||
                                 (file.isFile && selectionMode != FileSelector.DIRECTORIES_ONLY))) {
                     handleFileList(file, dirList, fList)
-                } else if (!file.name.startsWith(".") && (filenameFilter == null || filenameFilter!!.accept(file, file.name))) {
+                } else if (!file.name.startsWith(".") && (filenameFilter == null || filenameFilter!!.accept(dir, file.name))) {
                     handleFileList(file, dirList, fList)
                 }
             }
@@ -516,7 +516,7 @@ class SelectFileActivity : Activity(), AdapterView.OnItemClickListener, AdapterV
                     if (showHiddenFiles && it.name.startsWith(".") && ((it.isDirectory && selectionMode != FileSelector.FILES_ONLY) ||
                                     (it.isFile && selectionMode != FileSelector.DIRECTORIES_ONLY))) {
                         num++
-                    } else if (!it.name.startsWith(".") && (filenameFilter == null || filenameFilter!!.accept(it, it.name))) {
+                    } else if (!it.name.startsWith(".") && (filenameFilter == null || filenameFilter!!.accept(item.file, it.name))) {
                         num++
                     }
                 }
