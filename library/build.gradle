@@ -1,9 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
-def lib_version = '1.1.6'
+def lib_version = '1.2.0'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -23,14 +21,11 @@ android {
     lintOptions {
         abortOnError false
     }
-    packagingOptions {
-        exclude 'META-INF/library_release.kotlin_module'
-    }
 }
 
 dependencies {
     compileOnly "androidx.appcompat:appcompat:$appcompat_version"
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compileOnly "com.github.bumptech.glide:glide:$glide_version"
 }
 
 // 打包源码

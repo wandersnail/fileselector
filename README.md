@@ -8,7 +8,8 @@
 ```
 dependencies {
 	...
-	implementation 'com.github.wandersnail:fileselector:1.0.0'
+	implementation 'com.github.wandersnail:fileselector:latestVersion'
+	implementation 'com.github.bumptech.glide:glide:latestVersion'
 }
 ```
 
