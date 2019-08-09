@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.snail.commons.util.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ class SelectedItemDialog extends Dialog {
         View statusBar = view.findViewById(R.id.fsStatusBar);
         statusBar.setBackgroundColor(activity.themeColors[0]);
         ViewGroup.LayoutParams params = statusBar.getLayoutParams();
-        params.height = Utils.getStatusBarHeight(context);
+        params.height = UiUtils.getStatusBarHeight();
         statusBar.setLayoutParams(params);
         TextView tvClose = view.findViewById(R.id.fsTvClose);
         tvClose.setText(activity.textHolder.getText(TextHolder.CLOSE));

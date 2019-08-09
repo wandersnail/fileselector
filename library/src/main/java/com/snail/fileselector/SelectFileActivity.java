@@ -30,6 +30,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.snail.commons.util.ColorUtils;
+import com.snail.commons.util.FileUtils;
+import com.snail.commons.util.ShellUtils;
+import com.snail.commons.util.SystemUtils;
+import com.snail.commons.util.UiUtils;
+import com.snail.commons.util.entity.Storage;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -158,7 +164,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
         title = getIntent().getStringExtra(EXTRA_TITLE);
         int[] themeColors = getIntent().getIntArrayExtra(EXTRA_THEME_COLORS);
         if (themeColors == null) {
-            this.themeColors = new int[]{Utils.getPrimaryColor(this, ContextCompat.getColor(this, R.color.fsColorPrimary)), Utils.getPrimaryColor(this, ContextCompat.getColor(this, R.color.fsColorPrimaryDark))};
+            this.themeColors = new int[]{Utils.getPrimaryColor(this, ContextCompat.getColor(this, R.color.fsColorPrimary)), Utils.getPrimaryDarkColor(this, ContextCompat.getColor(this, R.color.fsColorPrimaryDark))};
         } else {
             this.themeColors = themeColors;
         }
@@ -277,7 +283,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
         fsStatusBar.setBackgroundColor(themeColors[0]);
         fsLayoutTitle.setBackgroundColor(themeColors[0]);
         ViewGroup.LayoutParams params = fsStatusBar.getLayoutParams();
-        params.height = Utils.getStatusBarHeight(this);
+        params.height = UiUtils.getStatusBarHeight();
         fsStatusBar.setLayoutParams(params);
         if (title == null) {
             fsTvTitle.setText(textHolder.getText(TextHolder.ALL_FILES));
@@ -285,7 +291,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
             fsTvTitle.setText(title);
         }
         fsTvSelected.setBackground(Utils.getFrameBlueBg(this, themeColors[0]));
-        fsTvSelected.setTextColor(Utils.createColorStateList(themeColors[0], Color.WHITE));
+        fsTvSelected.setTextColor(ColorUtils.createColorStateList(themeColors[0], Color.WHITE, themeColors[0]));
         fsTvOk.setBackground(Utils.getFillBlueBg(this, themeColors));
         fsTvCancel.setBackground(Utils.getFillGrayBg(this));
         fsTvOk.setEnabled(false);
@@ -382,7 +388,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
         ArrayList<Item> fList = new ArrayList<>();
         if (dir == null) {
             rootFiles.clear();
-            List<Storage> list = Utils.getStorages(this);
+            List<Storage> list = SystemUtils.getStorages(this);
             if (list != null) {
                 for (Storage storage : list) {
                     File file = new File(storage.getPath());
@@ -542,7 +548,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
                     		break;
                     }
                 }
-            });
+            }).show();
         }
         return true;
     }
@@ -579,7 +585,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
         if (!TextUtils.isEmpty(hint)) {
             et.setHint(hint);
         }
-        int padding = Utils.dp2px(this, 8f);
+        int padding = UiUtils.dp2px(8f);
         layout.setPadding(padding, 0, padding, 0);
         layout.addView(et);
         new AlertDialog.Builder(this)
@@ -753,8 +759,8 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
         items.add(textHolder.getText(TextHolder.NEW_FOLDER));
         items.add(textHolder.getText(showHiddenFiles ? TextHolder.DONOT_SHOW_HIDDEN_FILES : TextHolder.SHOW_HIDDEN_FILES));
         lv.setAdapter(new PopupMenuAdapter(this, items));
-        int height = items.size() * Utils.dp2px(this, 50f) + items.size();
-        final PopupWindow popupWindow = new PopupWindow(lv, Utils.getDisplayScreenWidth(this), height);
+        int height = items.size() * UiUtils.dp2px(50f) + items.size();
+        final PopupWindow popupWindow = new PopupWindow(lv, UiUtils.getDisplayScreenWidth(), height);
         popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.fs_popun_menu_bg));
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);    

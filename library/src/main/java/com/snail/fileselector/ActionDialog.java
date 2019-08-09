@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.snail.commons.util.UiUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,7 @@ class ActionDialog extends Dialog {
             window.setGravity(Gravity.BOTTOM);
             WindowManager.LayoutParams lp = window.getAttributes();
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = items.size() * Utils.dp2px(context, 50f) + items.size();
+            lp.height = items.size() * UiUtils.dp2px(50f) + items.size();
             window.setAttributes(lp);
         }
         setContentView(R.layout.fs_listview);

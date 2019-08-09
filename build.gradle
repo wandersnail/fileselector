@@ -3,12 +3,14 @@
 buildscript {
     ext {
         compileSdkVersion = 28
-        minSdkVersion = 19
+        minSdkVersion = 21
         targetSdkVersion = 28
 
         kotlin_version = '1.3.41'
         appcompat_version = '1.0.2'
         glide_version = '4.9.0'
+        commons_basic_version = '1.0.1'
+        commons_utils_version = '1.0.1'
     }
 
     repositories {
