@@ -10,6 +10,8 @@ dependencies {
 	...
 	implementation 'com.github.wandersnail:fileselector:latestVersion'
 	implementation 'com.github.bumptech.glide:glide:latestVersion'
+	implementation 'com.github.wandersnail:commons-basic:latestVersion'
+	implementation 'com.github.wandersnail:commons-utils:latestVersion'
 }
 ```
 
