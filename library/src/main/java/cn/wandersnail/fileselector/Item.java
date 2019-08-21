@@ -1,4 +1,4 @@
-package com.snail.fileselector;
+package cn.wandersnail.fileselector;
 
 import java.io.File;
 import java.util.Objects;

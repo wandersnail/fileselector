@@ -1,4 +1,4 @@
-package com.snail.fileselector;
+package cn.wandersnail.fileselector;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -10,14 +10,12 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.snail.commons.util.UiUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import cn.wandersnail.commons.util.UiUtils;
 
 /**
  * date: 2019/8/8 13:34

@@ -1,4 +1,4 @@
-package com.snail.fileselector;
+package cn.wandersnail.fileselector;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.snail.commons.util.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import cn.wandersnail.commons.util.UiUtils;
 
 /**
  * date: 2019/8/8 16:30

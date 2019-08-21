@@ -1,5 +1,5 @@
 ## 代码托管
-[![](https://jitpack.io/v/wandersnail/fileselector.svg)](https://jitpack.io/#wandersnail/fileselector)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-select/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/common-full)
 [![Download](https://api.bintray.com/packages/wandersnail/android/fileselector/images/download.svg) ](https://bintray.com/wandersnail/android/fileselector/_latestVersion)
 
 # 使用方法
@@ -10,18 +10,18 @@ dependencies {
 	...
 	implementation 'com.github.wandersnail:fileselector:latestVersion'
 	implementation 'com.github.bumptech.glide:glide:latestVersion'
-	implementation 'com.github.wandersnail:commons-basic:latestVersion'
-	implementation 'com.github.wandersnail:commons-utils:latestVersion'
+	implementation 'cn.wandersnail:common-base:latestVersion'
+	implementation 'cn.wandersnail:common-utils:latestVersion'
 }
 ```
 
-2. 如果从jcenter下载失败。在project的build.gradle里的repositories添加内容，最好两个都加上，有时jitpack会抽风，同步不下来。添加完再次同步即可。
+2. 如果从jcenter下载失败。在project的build.gradle里的repositories添加内容，最好两个都加上，添加完再次同步即可。
 ```
 allprojects {
 	repositories {
 		...
-		maven { url 'https://jitpack.io' }
-		maven { url 'https://dl.bintray.com/wandersnail/android/' }
+		mavenCentral()
+		maven { url 'https://dl.bintray.com/wandersnail/androidx/' }
 	}
 }
 ```

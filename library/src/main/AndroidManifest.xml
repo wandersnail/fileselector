@@ -1,4 +1,4 @@
-<manifest package="com.snail.fileselector"
+<manifest package="cn.wandersnail.fileselector"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -7,7 +7,7 @@
         android:allowBackup="true"
         android:supportsRtl="true">
         <activity
-            android:name="com.snail.fileselector.SelectFileActivity"
+            android:name="cn.wandersnail.fileselector.SelectFileActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
     </application>
 </manifest>

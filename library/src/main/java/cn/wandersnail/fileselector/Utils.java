@@ -1,4 +1,4 @@
-package com.snail.fileselector;
+package cn.wandersnail.fileselector;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -8,10 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.TypedValue;
-
-import com.snail.commons.util.UiUtils;
-
 import androidx.core.content.ContextCompat;
+import cn.wandersnail.commons.util.UiUtils;
 
 /**
  * date: 2019/8/8 13:57

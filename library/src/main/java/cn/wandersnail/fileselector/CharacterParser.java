@@ -1,4 +1,4 @@
-package com.snail.fileselector;
+package cn.wandersnail.fileselector;
 
 /**
  * Java汉字转换为拼音

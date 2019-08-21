@@ -1,4 +1,4 @@
-package com.snail.fileselector;
+package cn.wandersnail.fileselector;
 
 import android.Manifest;
 import android.app.Activity;
@@ -30,12 +30,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.snail.commons.util.ColorUtils;
-import com.snail.commons.util.FileUtils;
-import com.snail.commons.util.ShellUtils;
-import com.snail.commons.util.SystemUtils;
-import com.snail.commons.util.UiUtils;
-import com.snail.commons.util.entity.Storage;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -49,6 +43,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import cn.wandersnail.commons.util.ColorUtils;
+import cn.wandersnail.commons.util.FileUtils;
+import cn.wandersnail.commons.util.ShellUtils;
+import cn.wandersnail.commons.util.SystemUtils;
+import cn.wandersnail.commons.util.UiUtils;
+import cn.wandersnail.commons.util.entity.Storage;
 
 /**
  * date: 2019/8/8 16:51

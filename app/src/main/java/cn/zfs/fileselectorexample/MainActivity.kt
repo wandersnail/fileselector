@@ -3,9 +3,9 @@ package cn.zfs.fileselectorexample
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.snail.fileselector.FileSelector
-import com.snail.fileselector.Language
-import com.snail.fileselector.OnFileSelectListener
+import cn.wandersnail.fileselector.FileSelector
+import cn.wandersnail.fileselector.Language
+import cn.wandersnail.fileselector.OnFileSelectListener
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.FilenameFilter
 
