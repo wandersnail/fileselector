@@ -1,6 +1,6 @@
 ## 代码托管
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-select/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/common-full)
-[![Download](https://api.bintray.com/packages/wandersnail/android/fileselector/images/download.svg) ](https://bintray.com/wandersnail/android/fileselector/_latestVersion)
+[![Download](https://api.bintray.com/packages/wandersnail/androidx/file-selector/images/download.svg) ](https://bintray.com/wandersnail/androidx/file-selector/_latestVersion)
 
 # 使用方法
 
@@ -8,7 +8,7 @@
 ```
 dependencies {
 	...
-	implementation 'com.github.wandersnail:fileselector:latestVersion'
+	implementation 'cn.wandersnail:file-selector:latestVersion'
 	implementation 'com.github.bumptech.glide:glide:latestVersion'
 	implementation 'cn.wandersnail:common-base:latestVersion'
 	implementation 'cn.wandersnail:common-utils:latestVersion'
