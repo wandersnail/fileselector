@@ -68,7 +68,7 @@ publish {
     artifactId = lib_artifact //项目名称  
     publishVersion = lib_version //版本号  
     desc = lib_description
-    website = 'https://github.com/wandersnail'
+    website = 'https://github.com/wandersnail/fileselector'
 }
 
 if (project.getGradle().startParameter.taskNames.any { it.contains('bintrayUpload') }) {
@@ -85,7 +85,7 @@ if (project.getGradle().startParameter.taskNames.any { it.contains('bintrayUploa
                     artifactId lib_artifact
                     packaging lib_packaging
                     description lib_description
-                    url 'https://github.com/wandersnail'
+                    url 'https://github.com/wandersnail/fileselector'
                     version lib_version
 
                     scm {
