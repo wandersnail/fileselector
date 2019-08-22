@@ -50,8 +50,6 @@ class SelectedItemDialog extends Dialog {
 
     private View inflateView(Context context) {
         View view = View.inflate(context, R.layout.fs_dialog_selected_item, null);
-        View layoutTitle = view.findViewById(R.id.fsLayoutTitle);
-        layoutTitle.setBackgroundColor(activity.themeColors[0]);
         tvTitle = view.findViewById(R.id.fsTvTitle);
         tvTitle.setText(String.format(activity.textHolder.getText(TextHolder.SELECTED_ITEM_PATTERN), itemList.size()));
         View statusBar = view.findViewById(R.id.fsStatusBar);
@@ -61,20 +59,10 @@ class SelectedItemDialog extends Dialog {
         statusBar.setLayoutParams(params);
         TextView tvClose = view.findViewById(R.id.fsTvClose);
         tvClose.setText(activity.textHolder.getText(TextHolder.CLOSE));
-        tvClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        tvClose.setOnClickListener(v -> dismiss());
         TextView tvClear = view.findViewById(R.id.fsTvClear);
         tvClear.setText(activity.textHolder.getText(TextHolder.CLEAR));
-        tvClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.clearSelectedFileList();
-            }
-        });
+        tvClear.setOnClickListener(v -> activity.clearSelectedFileList());
         adapter = new FileListAdapter(activity, itemList);
         ListView lv = view.findViewById(R.id.fsLv);
         lv.setAdapter(adapter);
@@ -103,7 +91,7 @@ class SelectedItemDialog extends Dialog {
                     String path = data.file.getAbsolutePath();
                     if (data.file.isDirectory()) {
                         tvDesc.setVisibility(View.GONE);
-                        Glide.with(context).load(R.drawable.fs_folder).into(iv);
+                        Glide.with(context).load(R.drawable.fs_ic_folder).into(iv);
                     } else {
                         tvDesc.setText(data.file.getParentFile().getAbsolutePath());
                         if (Utils.isApk(path)) {
@@ -154,14 +142,11 @@ class SelectedItemDialog extends Dialog {
                     ivSelect = view.findViewById(R.id.fsIvSelect);
                     ivSelect.setVisibility(View.INVISIBLE);
                     chkView = view.findViewById(R.id.fsChkView);
-                    chkView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            int position = (int) chkView.getTag();
-                            Item item = getItem(position);
-                            item.checked = false;
-                            activity.updateSelectedFileList(item, true);
-                        }
+                    chkView.setOnClickListener(v -> {
+                        int position1 = (int) chkView.getTag();
+                        Item item = getItem(position1);
+                        item.checked = false;
+                        activity.updateSelectedFileList(item, true);
                     });
                     return view;
                 }

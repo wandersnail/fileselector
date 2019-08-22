@@ -7,7 +7,7 @@
           android:minHeight="50dp"
           android:paddingEnd="20dp"
           android:paddingStart="20dp"
-          android:textColor="@color/fsYahei"
-          android:textSize="16dp">
+          android:textColor="@color/fsTextColor"
+          android:textSize="15dp">
 
 </TextView>

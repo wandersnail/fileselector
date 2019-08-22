@@ -2,12 +2,13 @@
 <resources>
     <color name="fsColorPrimary">#4C61D9</color>
     <color name="fsColorPrimaryDark">#3F51B5</color>
-	<color name="fsMainBg">#F7F8FB</color>
+	<color name="fsMainBg">#FEFEFE</color>
     <color name="fsTransparent">#00000000</color>
     <color name="fsWhite">#FFFFFF</color>
-    <color name="fsYahei">#505050</color>
-    <color name="fsDivider">#C6C6C6</color>
+    <color name="fsTextColor">#050505</color>
+    <color name="fsDivider">#E1E1E1</color>
     <color name="fsSubText">#989898</color>
+    <color name="fsMenuText">#505050</color>
     <color name="fsDisable">#bfbfbf</color>
     <color name="fsEditHint">#CCCCCC</color>
     <color name="fsEditHintDark">#b0b0b0</color>

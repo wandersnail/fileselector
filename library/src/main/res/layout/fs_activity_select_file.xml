@@ -1,154 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fsMainBg"
+    android:orientation="vertical">
 
-    <View
-        android:id="@+id/fsStatusBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-    
-    <RelativeLayout
-        android:id="@+id/fsLayoutTitle"
-        android:layout_below="@id/fsStatusBar"
-        android:background="@color/fsColorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        
-        <ImageView
-            android:id="@+id/fsIvBack"
-            android:background="@drawable/fs_simple_btn_bg"
-            android:scaleType="fitStart"
-            android:paddingStart="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:src="@drawable/fs_back"
-            android:layout_width="55dp"
-            android:layout_height="50dp"/>
-        
-        <TextView
-            android:id="@+id/fsTvTitle"
-            android:textSize="20dp"
-            android:layout_marginStart="6dp"
-            android:layout_toEndOf="@id/fsIvBack"
-            android:layout_centerVertical="true"
-            android:textColor="@color/fsWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        
-        <ImageView
-            android:id="@+id/fsIvMore"
-            android:background="@drawable/fs_simple_btn_bg"
-            android:padding="16dp"
-            android:src="@drawable/fs_more"
-            android:layout_alignParentEnd="true"
-            android:layout_width="42dp"
-            android:layout_height="50dp"/>
-        
-        <ImageView
-            android:id="@+id/fsIvAll"
-            android:padding="10dp"
-            android:src="@drawable/fs_select_all"
-            android:layout_toStartOf="@id/fsIvMore"
-            android:layout_width="46dp"
-            android:layout_height="50dp"/>
-        
-    </RelativeLayout>
-    
     <LinearLayout
-        android:layout_below="@id/fsLayoutTitle"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/fsLayoutTitle"
+        android:layout_marginTop="1px"
+        android:orientation="vertical">
+
         <LinearLayout
-            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="40dp">
+            android:layout_height="40dp"
+            android:gravity="center_vertical">
+
             <TextView
                 android:id="@+id/fsTvRoot"
-                android:layout_marginStart="8dp"
-                android:gravity="center_vertical"
-                android:textSize="14dp"
-                android:textColor="@color/fsSubText"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/fsSubText"
+                android:textSize="13dp" />
+            
             <ImageView
-                android:background="@drawable/fs_arrow"
                 android:layout_width="14dp"
-                android:layout_height="14dp"/>
+                android:layout_height="14dp"
+                android:background="@drawable/fs_arrow" />            
+            
             <HorizontalScrollView
                 android:id="@+id/fsScrollView"
-                android:scrollbars="none"
-                android:overScrollMode="never"
                 android:layout_width="match_parent"
-                android:layout_height="40dp">
+                android:layout_height="40dp"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
                 <LinearLayout
                     android:id="@+id/fsDirContainer"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
             </HorizontalScrollView>
         </LinearLayout>
 
         <View
-            android:background="@color/fsDivider"
             android:layout_width="match_parent"
-            android:layout_height="1px"/>
+            android:layout_height="1px"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/fsDivider" />
+
         <ListView
             android:id="@+id/fsLv"
-            android:divider="@null"
-            android:overScrollMode="never"
             android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_height="0dp"/>
+            android:divider="@null"
+            android:overScrollMode="never" />
+
         <View
-            android:background="@color/fsDivider"
             android:layout_width="match_parent"
-            android:layout_height="1px"/>
-        <LinearLayout
-            android:gravity="center"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
+            android:layout_height="1px"
+            android:background="@color/fsDivider" />
+        
+        
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="60dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp">
 
             <TextView
                 android:id="@+id/fsTvCancel"
-                android:gravity="center"
                 android:textSize="14dp"
-                android:textColor="@color/fsWhite"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="30dp"/>
-
+                android:textColor="@color/fsMenuText"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            
             <TextView
                 android:id="@+id/fsTvSelected"
-                android:gravity="center"
-                android:textSize="14dp"
-                android:layout_marginStart="20dp"
-                android:layout_weight="1.8"
-                android:layout_width="0dp"
-                android:layout_height="30dp"/>
+                android:textColor="@color/fsTextColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"                
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/fsTvOk"
-                android:gravity="center"
                 android:textSize="14dp"
-                android:layout_marginStart="20dp"
-                android:textColor="@color/fsWhite"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="30dp"/>
-        </LinearLayout>
-    </LinearLayout>   
-    
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/fsLayoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/fsStatusBar">
+
+        <ImageView
+            android:id="@+id/fsIvBack"
+            android:layout_width="46dp"
+            android:layout_height="50dp"
+            android:background="@drawable/fs_simple_btn_bg"
+            android:paddingStart="6dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/fs_ic_back" />
+
+        <ImageView
+            android:id="@+id/fsIvMore"
+            android:layout_centerVertical="true"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:padding="8dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/fs_simple_btn_bg"
+            android:src="@drawable/fs_ic_more" />
+
+        <ImageView
+            android:id="@+id/fsIvAll"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_toStartOf="@id/fsIvMore"
+            android:src="@drawable/fs_ic_select_all" />
+
+        <TextView
+            android:id="@+id/fsTvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/fsIvBack"
+            android:textColor="@color/fsTextColor"
+            android:textSize="17dp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/fsLayoutTitle"
+        android:background="@color/fsDivider" />
+
+    <View
+        android:id="@+id/fsStatusBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
     <View
         android:id="@+id/fsMaskView"
-        android:visibility="gone"
-        android:background="#8222"
-        android:layout_below="@id/fsLayoutTitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/fsLayoutTitle"
+        android:background="#8222"
+        android:visibility="gone" />
 </RelativeLayout>

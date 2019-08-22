@@ -7,9 +7,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +39,9 @@ class ActionDialog extends Dialog {
         setContentView(R.layout.fs_listview);
         ListView lv = findViewById(R.id.lv);
         lv.setAdapter(new ActionAdapter(context, items));
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                dismiss();
-                callback.onSelect(position);
-            }
+        lv.setOnItemClickListener((parent, view, position, id) -> {
+            dismiss();
+            callback.onSelect(position);
         });
     }
     

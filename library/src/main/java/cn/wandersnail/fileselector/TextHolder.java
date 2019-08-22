@@ -27,6 +27,7 @@ class TextHolder {
     static final int RENAME_FAILED = 19;
     static final int SHOW_HIDDEN_FILES = 20;
     static final int DONOT_SHOW_HIDDEN_FILES = 21;
+    static final int VIEW_SELECTED_PATTERN = 22;
 
     private SparseArray<SparseArray<String>> lanArr = new SparseArray<>();
     Language language = Language.SIMPLIFIED_CHINESE;
@@ -53,6 +54,7 @@ class TextHolder {
         zhCN.put(ENSURE_DELETE_PROMPT, "确定删除吗");
         zhCN.put(SHOW_HIDDEN_FILES, "显示隐藏文件");
         zhCN.put(DONOT_SHOW_HIDDEN_FILES, "不显示隐藏文件");
+        zhCN.put(VIEW_SELECTED_PATTERN, "查看已选(%d)");
         lanArr.put(Language.SIMPLIFIED_CHINESE.value, zhCN);
 
         SparseArray<String> zhTW = new SparseArray<>();
@@ -76,6 +78,7 @@ class TextHolder {
         zhTW.put(ENSURE_DELETE_PROMPT, "確定刪除嗎");
         zhTW.put(SHOW_HIDDEN_FILES, "顯示隱藏文件");
         zhTW.put(DONOT_SHOW_HIDDEN_FILES, "不顯示隱藏文件");
+        zhTW.put(VIEW_SELECTED_PATTERN, "查看已選(%d)");
         lanArr.put(Language.TRADITIONAL_CHINESE.value, zhTW);
 
         SparseArray<String> en = new SparseArray<>();
@@ -99,6 +102,7 @@ class TextHolder {
         en.put(ENSURE_DELETE_PROMPT, "Are you sure you want to delete it?");
         en.put(SHOW_HIDDEN_FILES, "Show hidden files");
         en.put(DONOT_SHOW_HIDDEN_FILES, "Don't show hidden files");
+        en.put(VIEW_SELECTED_PATTERN, "View selected(%d)");
         lanArr.put(Language.ENGLISH.value, en);
     }
 
