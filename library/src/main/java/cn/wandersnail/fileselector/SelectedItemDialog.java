@@ -53,7 +53,6 @@ class SelectedItemDialog extends Dialog {
         tvTitle = view.findViewById(R.id.fsTvTitle);
         tvTitle.setText(String.format(activity.textHolder.getText(TextHolder.SELECTED_ITEM_PATTERN), itemList.size()));
         View statusBar = view.findViewById(R.id.fsStatusBar);
-        statusBar.setBackgroundColor(activity.themeColors[0]);
         ViewGroup.LayoutParams params = statusBar.getLayoutParams();
         params.height = UiUtils.getStatusBarHeight();
         statusBar.setLayoutParams(params);

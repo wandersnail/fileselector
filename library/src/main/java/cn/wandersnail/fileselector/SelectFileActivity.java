@@ -119,15 +119,15 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
+        super.onCreate(savedInstanceState);        
         //沉浸状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDataFromIntent();
         setContentView(R.layout.fs_activity_select_file);
         //先检查写权限
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || 
+                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSON_REQUESTCODE);
         } else {
             assignViews();
@@ -271,7 +271,6 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
         fsTvRoot.setText(textHolder.getText(TextHolder.ROOT));
         fsTvCancel.setText(textHolder.getText(TextHolder.CANCEL));
         fsTvOk.setText(textHolder.getText(TextHolder.OK));
-        fsStatusBar.setBackgroundColor(themeColors[0]);
         ViewGroup.LayoutParams params = fsStatusBar.getLayoutParams();
         params.height = UiUtils.getStatusBarHeight();
         fsStatusBar.setLayoutParams(params);
