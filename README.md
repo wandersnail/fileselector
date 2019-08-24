@@ -1,5 +1,5 @@
 ## 代码托管
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-select/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/common-full)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-selector/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-selector)
 [![Download](https://api.bintray.com/packages/wandersnail/androidx/file-selector/images/download.svg) ](https://bintray.com/wandersnail/androidx/file-selector/_latestVersion)
 
 # 使用方法
