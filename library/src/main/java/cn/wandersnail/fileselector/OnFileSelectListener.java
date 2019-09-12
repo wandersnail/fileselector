@@ -7,5 +7,5 @@ import java.util.List;
  * author: zengfansheng
  */
 public interface OnFileSelectListener {
-    void onFileSelect(List<String> paths);
+    void onFileSelect(int requestCode, List<String> paths);
 }

@@ -18,8 +18,6 @@ import androidx.fragment.app.Fragment;
  * author: zengfansheng
  */
 public class FileSelector {
-    private static final int REQUEST_CODE = 21516;
-    
     public static final int FILES_ONLY = 0;
     public static final int DIRECTORIES_ONLY = 1;
     public static final int FILES_AND_DIRECTORIES = 2;
@@ -123,16 +121,16 @@ public class FileSelector {
     /**
      * 开始选择
      */
-    public void select(@NonNull Activity activity) {
-        activity.startActivityForResult(obtainIntent(activity), REQUEST_CODE);
+    public void select(@NonNull Activity activity, int requestCode) {
+        activity.startActivityForResult(obtainIntent(activity), requestCode);
     }
 
     /**
      * 开始选择
      */
-    public void select(@NonNull Fragment fragment) {
+    public void select(@NonNull Fragment fragment, int requestCode) {
         if (fragment.getActivity() != null) {
-            fragment.startActivityForResult(obtainIntent(fragment.getActivity()), REQUEST_CODE);
+            fragment.startActivityForResult(obtainIntent(fragment.getActivity()), requestCode);
         }
     }
 
@@ -161,20 +159,16 @@ public class FileSelector {
     /**
      * 将Activty或Fragment的结果传过来处理
      */
-    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {        
+        if (resultCode == Activity.RESULT_OK) {
             if (listener != null && data != null) {
+                String name = data.getStringExtra(SelectFileActivity.EXTRA_SELECTOR_NAME);
                 String classHash = data.getStringExtra(SelectFileActivity.EXTRA_SELECTOR_HASH);
-                if (toString().equals(classHash)) {
+                if (SelectFileActivity.class.getName().equals(name) && toString().equals(classHash)) {
                     if (handler == null) {
                         handler = new Handler(Looper.getMainLooper());
                     }
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.onFileSelect(data.getStringArrayListExtra(SelectFileActivity.EXTRA_SELECTED_FILE_PATH_LIST));
-                        }
-                    }, 200);
+                    handler.postDelayed(() -> listener.onFileSelect(requestCode, data.getStringArrayListExtra(SelectFileActivity.EXTRA_SELECTED_FILE_PATH_LIST)), 200);
                 }
             }
         }

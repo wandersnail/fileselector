@@ -71,24 +71,15 @@
         
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:paddingStart="30dp"
-            android:paddingEnd="30dp">
-
-            <TextView
-                android:id="@+id/fsTvCancel"
-                android:textSize="14dp"
-                android:textColor="@color/fsMenuText"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:layout_height="60dp">
             
             <TextView
                 android:id="@+id/fsTvSelected"
+                android:layout_marginStart="30dp"
                 android:textColor="@color/fsTextColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"                
+                android:layout_centerVertical="true"
                 android:textSize="15dp" />
 
             <TextView
@@ -96,6 +87,11 @@
                 android:textSize="14dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginEnd="14dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
@@ -108,15 +104,13 @@
         android:layout_below="@id/fsStatusBar">
 
         <ImageView
-            android:id="@+id/fsIvBack"
-            android:layout_width="46dp"
+            android:id="@+id/fsIvClose"
+            android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/fs_simple_btn_bg"
-            android:paddingStart="6dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:padding="17dp"
             android:scaleType="fitStart"
-            android:src="@drawable/fs_ic_back" />
+            android:src="@drawable/fs_ic_fork" />
 
         <ImageView
             android:id="@+id/fsIvMore"
@@ -142,7 +136,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/fsIvBack"
+            android:layout_toEndOf="@id/fsIvClose"
+            android:layout_marginStart="20dp"
             android:textColor="@color/fsTextColor"
             android:textSize="17dp" />
 

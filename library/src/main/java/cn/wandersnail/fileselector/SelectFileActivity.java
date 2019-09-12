@@ -58,6 +58,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
 
     public static final String EXTRA_SELECTION_MODE = "SELECTION_MODE";
     public static final String EXTRA_SELECTOR_HASH = "SELECTOR_HASH";
+    public static final String EXTRA_SELECTOR_NAME = "SELECTOR_NAME";
     public static final String EXTRA_IS_MULTI_SELECT = "IS_MULTI_SELECT";
     public static final String EXTRA_IS_LANDSCAPE = "SCREEN_ORIENTATION";
     public static final String EXTRA_ROOT = "ROOT";
@@ -86,7 +87,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
     private boolean showHiddenFiles;//设置是否显示隐藏文件和文件夹
     private View fsStatusBar;
     private RelativeLayout fsLayoutTitle;
-    private ImageView fsIvBack;
+    private ImageView fsIvClose;
     private TextView fsTvTitle;
     private ImageView fsIvMore;
     private ImageView fsIvAll;
@@ -94,7 +95,6 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
     private HorizontalScrollView fsScrollView;
     private LinearLayout fsDirContainer;
     private ListView fsLv;
-    private TextView fsTvCancel;
     private TextView fsTvSelected;
     private TextView fsTvOk;
     private View fsMaskView;
@@ -102,7 +102,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
     private void assignViews() {
         fsStatusBar = findViewById(R.id.fsStatusBar);
         fsLayoutTitle = findViewById(R.id.fsLayoutTitle);
-        fsIvBack = findViewById(R.id.fsIvBack);
+        fsIvClose = findViewById(R.id.fsIvClose);
         fsTvTitle = findViewById(R.id.fsTvTitle);
         fsIvMore = findViewById(R.id.fsIvMore);
         fsIvAll = findViewById(R.id.fsIvAll);
@@ -110,7 +110,6 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
         fsScrollView = findViewById(R.id.fsScrollView);
         fsDirContainer = findViewById(R.id.fsDirContainer);
         fsLv = findViewById(R.id.fsLv);
-        fsTvCancel = findViewById(R.id.fsTvCancel);
         fsTvSelected = findViewById(R.id.fsTvSelected);
         fsTvOk = findViewById(R.id.fsTvOk);
         fsMaskView = findViewById(R.id.fsMaskView);
@@ -269,7 +268,6 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
     
     private void initViews() {
         fsTvRoot.setText(textHolder.getText(TextHolder.ROOT));
-        fsTvCancel.setText(textHolder.getText(TextHolder.CANCEL));
         fsTvOk.setText(textHolder.getText(TextHolder.OK));
         ViewGroup.LayoutParams params = fsStatusBar.getLayoutParams();
         params.height = UiUtils.getStatusBarHeight();
@@ -291,7 +289,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
     }
         
     private void initEvents() {       
-        fsIvBack.setOnClickListener(v -> onBackPressed());
+        fsIvClose.setOnClickListener(v -> finish());
         fsIvMore.setOnClickListener(v -> showPopupWindow());
         fsIvAll.setOnClickListener(v -> switchSelectAll(!isSelectedAll));
         fsTvSelected.setOnClickListener(v -> {
@@ -313,7 +311,6 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
                 fsDirContainer.removeAllViews();
             }
         });
-        fsTvCancel.setOnClickListener(v -> finish());
         fsTvOk.setOnClickListener(v -> {
             Intent intent = new Intent();
             ArrayList<String> pathList = new ArrayList<>();
@@ -333,6 +330,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
             }
             intent.putExtra(EXTRA_SELECTED_FILE_PATH_LIST, pathList);
             intent.putExtra(EXTRA_SELECTOR_HASH, selectorHash);
+            intent.putExtra(EXTRA_SELECTOR_NAME, SelectFileActivity.class.getName());
             setResult(Activity.RESULT_OK, intent);
             finish();
         });
