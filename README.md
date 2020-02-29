@@ -76,7 +76,7 @@ allprojects {
 	}
 
 ## 示例效果
-![image](https://gitee.com/fszeng/widget-generic/raw/master/screenshot/device-2018-05-27-165915.png)
-![image](https://gitee.com/fszeng/widget-generic/raw/master/screenshot/device-2018-05-27-170008.png)
-![image](https://gitee.com/fszeng/widget-generic/raw/master/screenshot/device-2018-05-27-170035.png)
-![image](https://gitee.com/fszeng/widget-generic/raw/master/screenshot/device-2018-05-27-162627.png)
+![image](https://gitee.com/fszeng/fileselector/raw/master/screenshot/device-2018-05-27-165915.png)
+![image](https://gitee.com/fszeng/fileselector/raw/master/screenshot/device-2018-05-27-170008.png)
+![image](https://gitee.com/fszeng/fileselector/raw/master/screenshot/device-2018-05-27-170035.png)
+![image](https://gitee.com/fszeng/fileselector/raw/master/screenshot/device-2018-05-27-162627.png)
