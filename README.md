@@ -1,7 +1,8 @@
 ## 代码托管
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-selector/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-selector)
 [![Download](https://api.bintray.com/packages/wandersnail/androidx/file-selector/images/download.svg) ](https://bintray.com/wandersnail/androidx/file-selector/_latestVersion)
-
+[![](https://img.shields.io/badge/源码-github-blue.svg)](https://github.com/wandersnail/file-selector)
+[![](https://img.shields.io/badge/源码-码云-blue.svg)](https://gitee.com/fszeng/file-selector)
 # 使用方法
 
 1. module的build.gradle中的添加依赖，自行修改为最新版本，同步后通常就可以用了：
@@ -75,8 +76,9 @@ allprojects {
 	    }
 	}
 
+
 ## 示例效果
-![image](https://gitee.com/fszeng/fileselector/raw/master/screenshot/device-2018-05-27-165915.png)
-![image](https://gitee.com/fszeng/fileselector/raw/master/screenshot/device-2018-05-27-170008.png)
-![image](https://gitee.com/fszeng/fileselector/raw/master/screenshot/device-2018-05-27-170035.png)
-![image](https://gitee.com/fszeng/fileselector/raw/master/screenshot/device-2018-05-27-162627.png)
+![image](https://s2.ax1x.com/2020/02/29/3sonAI.png)
+![image](https://s2.ax1x.com/2020/02/29/3soeHA.png)
+![image](https://s2.ax1x.com/2020/02/29/3soZBd.png)
+![image](https://s2.ax1x.com/2020/02/29/3soVnH.png)
