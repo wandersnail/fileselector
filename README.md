@@ -3,7 +3,6 @@
 
 ## 代码托管
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-selector/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cn.wandersnail/file-selector)
-[![Download](https://api.bintray.com/packages/wandersnail/androidx/file-selector/images/download.svg) ](https://bintray.com/wandersnail/androidx/file-selector/_latestVersion)
 [![](https://img.shields.io/badge/源码-github-blue.svg)](https://github.com/wandersnail/fileselector)
 [![](https://img.shields.io/badge/源码-码云-blue.svg)](https://gitee.com/fszeng/fileselector)
 # 使用方法
