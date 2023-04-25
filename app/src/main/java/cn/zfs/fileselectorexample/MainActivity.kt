@@ -35,7 +35,9 @@ class MainActivity : CheckPermissionsActivity() {
         }
         btnSelectSingleDir.setOnClickListener {
             selector!!.setSelectionMode(FileSelector.DIRECTORIES_ONLY)
-            selector!!.setLanguage(Language.TRADITIONAL_CHINESE)
+//            selector!!.setLanguage(Language.TRADITIONAL_CHINESE)
+            selector!!.setScreenOrientation(true)
+            selector!!.setRoot(null)
             selector!!.setMultiSelectionEnabled(false)
             selector!!.select(this, 3)
         }
