@@ -2,12 +2,15 @@ package cn.wandersnail.fileselector;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -98,7 +102,51 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
     private TextView fsTvSelected;
     private TextView fsTvOk;
     private View fsMaskView;
+    private BroadcastReceiver mScanListener = new BroadcastReceiver() { // from class: com.android.rk.RockExplorer.16
+        @Override // android.content.BroadcastReceiver
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action != null && (action.equals(Intent.ACTION_MEDIA_MOUNTED) || action.equals(Intent.ACTION_MEDIA_UNMOUNTED))) {
+                File tmpCurDir = rootFile;
+                if (action.equals(Intent.ACTION_MEDIA_UNMOUNTED)) {
+                    String sdcardDir=Environment.getExternalStorageDirectory().getAbsolutePath();
+                    String changeDir="";
+                    if(intent.getData()!=null)
+                    {changeDir=intent.getData().getPath();}
+                    if (changeDir!=null&&!changeDir.equals(sdcardDir)) {
+                        loadFiles(null);
+                        posList.clear();
+                        fsDirContainer.removeAllViews();
+                    }
+                }else{
+                    if(tmpCurDir==null|| Objects.equals(tmpCurDir.getAbsolutePath(), "/")){
+                        loadFiles(rootFile);
+                        posList.clear();
+                        fsDirContainer.removeAllViews();
+                    }
+                }
 
+            }
+        }
+    };
+    private boolean isRegistered=false;
+
+    public void registerBroadcastRec() {
+        IntentFilter f = new IntentFilter();
+        f.addAction("android.intent.action.MEDIA_MOUNTED");
+        f.addAction("android.intent.action.MEDIA_UNMOUNTED");
+        f.addAction("android.os.storage.action.VOLUME_STATE_CHANGED");
+        f.addAction("android.intent.action.MEDIA_BAD_REMOVAL");
+        f.addDataScheme("file");
+        isRegistered=true;
+        registerReceiver(this.mScanListener, f);
+    }
+    private void unRegisterBroadcast(){
+        if(isRegistered) {
+            unregisterReceiver(this.mScanListener);
+            isRegistered=false;
+        }
+    }
     private void assignViews() {
         fsStatusBar = findViewById(R.id.fsStatusBar);
         fsLayoutTitle = findViewById(R.id.fsLayoutTitle);
@@ -132,7 +180,9 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
             assignViews();
             initViews();
             initEvents();
+            registerBroadcastRec();
         }
+
     }
     
     private void getDataFromIntent() {
@@ -203,6 +253,7 @@ public class SelectFileActivity extends Activity implements AdapterView.OnItemCl
     @Override
     protected void onDestroy() {
         filenameFilter = null;
+        unRegisterBroadcast();
         super.onDestroy();
     }
 
